@@ -85,8 +85,11 @@ namespace ViberationScope
                 thrdDataReceived = new Thread(new ThreadStart(DataReceived));
                 thrdDataReceived.Start();
 
+                WifiData wd = new WifiData();
+                wd.buf1 = buf1;
+                originalData = wd;
                 originalData.onEvent += new TimerCallback(onStopMeasure);
-                toolStripButton_Start_Click(this, null);
+                //toolStripButton_Start_Click(this, null);
             }
             catch (Exception ex) { }
             timer1.Enabled = true;
@@ -194,6 +197,7 @@ namespace ViberationScope
         private void toolStripButton_Stop_Click(object sender, EventArgs e)
         {
             originalData.Stop();
+            fsRawData.Close();
             toolStripButton_Start.Enabled = true;
             toolStripButton_Stop.Enabled = false;
         }
@@ -427,6 +431,7 @@ namespace ViberationScope
                 }
             }
             s.Send(new byte[] { 0xbb }, 1, _ep);
+            s.Close();
             onEvent("Stopped");
         }
 
