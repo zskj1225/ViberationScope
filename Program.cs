@@ -13,9 +13,9 @@ namespace ViberationScope
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.EnableVisualStyles();//应用程序启用可视化应用程序
+            Application.SetCompatibleTextRenderingDefault(false);//使用GDI方式显示文本
+            Application.Run(new Form1());//运行窗口
         }
     }
 }

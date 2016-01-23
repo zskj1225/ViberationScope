@@ -26,15 +26,16 @@ namespace ViberationScope
         const double b1=0.995;
         double b2=1-b1;
         Complex x1, x2;
-        const int frameLen = 3;
+        const int frameLen = 3;//表示framelen是一个常量
         UInt32 index = 0;
         Thread thrdDataReceived=null;
         Boolean isRunning = false;
         BlockingCircularBuffer<byte> buf1;
-        sampleData originalData = new COMData();
+        sampleData originalData = new COMData();//抽样数据
+
         object originalDataDevice;
         System.IO.FileStream fsRawData;
-        Queue<double> sampleQ = new Queue<double>();
+        Queue<double> sampleQ = new Queue<double>();//
         ShiftBuffer<double> spikes;
         public Form1()
         {
@@ -46,11 +47,11 @@ namespace ViberationScope
             System.IO.Ports.SerialPort sp = sender as System.IO.Ports.SerialPort;
             lock (sp)
             {
-                while (sp.BytesToRead > 0)
+                while (sp.BytesToRead > 0)//所记录接受数据值大于0
                 {
-                    byte b = (byte)sp.ReadByte();
+                    byte b = (byte)sp.ReadByte();//读取缓冲数据
                     buf1.Put(b);
-                    fsRawData.WriteByte(b);
+                    fsRawData.WriteByte(b);//用于只写
                 }
             }
         }
@@ -75,8 +76,8 @@ namespace ViberationScope
                 numPointPerLine = SystemSetup.getInstance().dev_Setup.NumFFT;
                 buf1 = new BlockingCircularBuffer<byte>(numPointPerLine * 4);
                 chartData = new double[chart1.Series.Count, numPointPerLine];
-                serialPort1.PortName = SystemSetup.getInstance().dev_Setup.DevPortName;
-                serialPort1.BaudRate = SystemSetup.getInstance().dev_Setup.BaudRate;
+                serialPort1.PortName = SystemSetup.getInstance().dev_Setup.DevPortName;//串口名称
+                serialPort1.BaudRate = SystemSetup.getInstance().dev_Setup.BaudRate;//波特率
                 originalDataDevice = serialPort1;
                 cnt2 = 100;
                 spikes = new ShiftBuffer<double>(numPointPerLine);
@@ -120,7 +121,7 @@ namespace ViberationScope
                     chartData[0,index] = BitConverter.ToInt16(buf, 1);
                     lock (sampleQ)
                     {
-                        sampleQ.Enqueue(chartData[0, index]);
+                        sampleQ.Enqueue(chartData[0, index]);//添加数据在sampleQ
                     }
                     for (int i = 0; i < frameLen; i++)
                     {
@@ -140,7 +141,8 @@ namespace ViberationScope
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            chart1.Series[0].Points.Clear();
+            chart1.Series[0].Points.Clear();//刷新控件内数据
+
             chart1.Series[1].Points.Clear();
             chart1.Series[2].Points.Clear();
             chart1.Series[3].Points.Clear();
@@ -182,7 +184,7 @@ namespace ViberationScope
 
         private void toolStripButton_Start_Click(object sender, EventArgs e)
         {
-            UInt32 delay;
+            UInt32 delay;//32位无符号整型
             UInt32 threshold;
             uint.TryParse(toolStripTextBox1.Text, out delay);
             uint.TryParse(toolStripTextBox2.Text, out threshold);
@@ -197,7 +199,8 @@ namespace ViberationScope
         private void toolStripButton_Stop_Click(object sender, EventArgs e)
         {
             originalData.Stop();
-            fsRawData.Close();
+            if (fsRawData != null)
+                fsRawData.Close();
             toolStripButton_Start.Enabled = true;
             toolStripButton_Stop.Enabled = false;
         }
@@ -300,7 +303,7 @@ namespace ViberationScope
                 {
                     WifiData wd = new WifiData();
                     wd.buf1 = buf1;
-                    originalData = wd;
+                    originalData = wd;//抽样样例数据
                 }
                 originalData.onEvent += new TimerCallback(onStopMeasure);
             }
@@ -320,14 +323,14 @@ namespace ViberationScope
         {
         }
     }
-    class COMData : sampleData
+    class COMData : sampleData//抽样数据
     {
-        System.IO.Ports.SerialPort thePort;
-        public override void Start(object src)
+        System.IO.Ports.SerialPort thePort; //接口
+        public override void Start(object src) //SRC
         {
             try
             {
-                thePort = src as System.IO.Ports.SerialPort;
+                thePort = src as System.IO.Ports.SerialPort;//接口即Src
                 thePort.Open();
             }
             catch (Exception ex) { }
@@ -387,16 +390,21 @@ namespace ViberationScope
     {
         bool isRunning;
         public CircularBuffer<byte> buf1 = null;
+        System.Net.Sockets.UdpClient s;
         public override void Start(object src)
         {
             _Text = src.ToString();
             System.Threading.Thread thrd = new Thread(new System.Threading.ParameterizedThreadStart(loadData));
             System.Console.WriteLine("begin");
-            thrd.Start(src as string);
+
+            s = new System.Net.Sockets.UdpClient(60000);
+            thrd.Start(src as string);//声明src是字符串类型
         }
         public override void Stop()
         {
             isRunning = false;
+            if (s == null) return;
+            s.Close();
         }
         String _Text;
         public override String Text
@@ -407,31 +415,36 @@ namespace ViberationScope
         {
             string filename = o as string;
             System.Console.WriteLine("begin");
-            System.Net.Sockets.UdpClient s = new System.Net.Sockets.UdpClient(60000);
+
             System.Net.IPAddress _addr = new System.Net.IPAddress(new byte[] { 192, 168, 2, 1 });
             System.Net.IPEndPoint _ep = new System.Net.IPEndPoint(_addr, 8000);
             s.Send(new byte[] { 0xaa }, 1, _ep);
             isRunning = true;
-            while (isRunning == true)
+            try
             {
-                byte[] recvBuf=s.Receive(ref _ep);
-                int pos = 0;
-                byte[] package = new byte[100];
-                while (pos < recvBuf.Length)
+                while (isRunning == true)
                 {
-                    Array.Copy(recvBuf, pos, package, 0, 100);
-                    for (int i = 2; i < package.Length-2; i += 6)
+                    byte[] recvBuf = s.Receive(ref _ep);
+                    int pos = 0;
+                    byte[] package = new byte[100];
+                    while (pos < recvBuf.Length)
                     {
-                        buf1.Put(0xA5);
-                        buf1.Put(package[i]);
-                        buf1.Put(package[i+1]);
-                    }
-                    pos += 100;
+                        Array.Copy(recvBuf, pos, package, 0, 100);
+                        for (int i = 2; i < package.Length - 2; i += 6)
+                        {
+                            buf1.Put(0xA5);
+                            buf1.Put(package[i]);
+                            buf1.Put(package[i + 1]);
+                        }
+                        pos += 100;
 
+                    }
                 }
             }
-            s.Send(new byte[] { 0xbb }, 1, _ep);
-            s.Close();
+            catch (Exception ex)
+            {
+
+            }
             onEvent("Stopped");
         }
 
