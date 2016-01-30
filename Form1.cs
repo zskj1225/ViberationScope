@@ -25,7 +25,7 @@ namespace ViberationScope
         int cnt1,cnt2;
         double computedFreq = 0;
         double [] fft_mag;
-        double a1;
+        List<double> marks = new List<double>();
         int numRun=1;
         const double b1=0.995;
         double b2=1-b1;
@@ -93,7 +93,7 @@ namespace ViberationScope
             {
                 numPointPerLine = SystemSetup.getInstance().dev_Setup.NumFFT;
                 buf1 = new BlockingCircularBuffer<byte>(numPointPerLine * 4);
-                chartData = new double[chart1.Series.Count, numPointPerLine];
+                chartData = new double[chart_Wave.Series.Count, numPointPerLine];
                 serialPort1.PortName = SystemSetup.getInstance().dev_Setup.DevPortName;//串口名称
                 serialPort1.BaudRate = SystemSetup.getInstance().dev_Setup.BaudRate;//波特率
                 originalDataDevice = serialPort1;
@@ -226,11 +226,22 @@ namespace ViberationScope
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            chart1.Series[0].Points.Clear();//刷新控件内数据
+            chart_Wave.Series[0].Points.Clear();//刷新控件内数据
 
-            chart1.Series[1].Points.Clear();
-            chart1.Series[2].Points.Clear();
-            chart1.Series[3].Points.Clear();
+            chart_Wave.Series[1].Points.Clear();
+            chart_Wave.Series[2].Points.Clear();
+            chart_Wave.Series[3].Points.Clear();
+            foreach (float mark in marks)
+            {
+                Font drawFont = new Font("Arial", 16);
+                SolidBrush drawBrush = new SolidBrush(Color.Red);
+
+                // Create point for upper-left corner of drawing.
+                PointF drawPoint = new PointF(mark, 0);
+                Graphics g = chart_Wave.CreateGraphics();
+                g.DrawString("*", drawFont, drawBrush, drawPoint);
+
+            }
             Complex[] inArr = new Complex[numPointPerLine];
             inArr[0] = chartData[0,0];
             for (int i = 1; i < inArr.Length; i++)
@@ -240,11 +251,11 @@ namespace ViberationScope
             System.Numerics.Complex[] newfft = DSP.FFT(inArr);
             for (UInt32 i = index; i < numPointPerLine; i++)
             {
-                chart1.Series[0].Points.Add(chartData[0,i]);
+                chart_Wave.Series[0].Points.Add(chartData[0,i]);
             }
             for (int i = 0; i < index; i++)
             {
-                chart1.Series[0].Points.Add(chartData[0,i]);
+                chart_Wave.Series[0].Points.Add(chartData[0,i]);
             }
             for (int i = 0; i < numPointPerLine; i++)
             {
@@ -252,7 +263,7 @@ namespace ViberationScope
             }
             for (int i = 0; i < fft_mag.Length; i++)
             {
-                chart1.Series[1].Points.Add(fft_mag[i] / 4 - 20);
+                chart_Wave.Series[1].Points.Add(fft_mag[i] / 4 - 20);
             }
             lock (sampleQ)
             {
@@ -263,7 +274,11 @@ namespace ViberationScope
             }
             for (uint i = 0; i < numPointPerLine; i++)
             {
-                chart1.Series[2].Points.Add(spikes.ElementAt(i) / 4 - 20);
+                chart_Wave.Series[2].Points.Add(spikes.ElementAt(i) / 4 - 20);
+            }
+            float f1, f2, diff;
+            if(float.TryParse(toolStripTextBox_F1.Text,out f1) && float.TryParse(toolStripTextBox_F2.Text, out f2) && float.TryParse(toolStripTextBox_Harmonics.Text, out diff) && diff != 0) {
+                toolStripStatusLabel_Freq.Text = ((f2 - f1) / diff).ToString();
             }
         }
 
@@ -419,16 +434,37 @@ namespace ViberationScope
 
         }
 
-        private void chart1_Click(object sender, EventArgs e)
+        private void chart_Wave_Click(object sender, EventArgs e)
         {
-
+            MouseEventArgs me = (MouseEventArgs)e;
+            System.Console.WriteLine(chart_Wave.Width);
+            System.Console.WriteLine(me.X);
+            float f = me.X * 200 / chart_Wave.Width;
+            if (marks.Count == 0)
+            {
+                marks.Add(me.X);
+                toolStripTextBox_F1.Text = f.ToString();
+            }
+            else if (marks.Count == 1)
+            {
+                marks.Add(me.X);
+                toolStripTextBox_F2.Text = f.ToString();
+            }
+            else
+            {
+                marks.Clear();
+            }
         }
 
-     
+        private void chart_Wave_CursorPositionChanged(object sender, System.Windows.Forms.DataVisualization.Charting.CursorEventArgs e)
+        {
+            System.Console.WriteLine(e.NewPosition);
+        }
+
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            chart1.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
-            chart1.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
+            chart_Wave.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
+            chart_Wave.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
         }
 
         private void toolStripButton_Config_Click(object sender, EventArgs e)

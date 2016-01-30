@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViberationScope));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             ""}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134))));
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chart_Wave = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_Freq = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton_Start = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_Stop = new System.Windows.Forms.ToolStripButton();
@@ -58,6 +58,10 @@
             this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBox_F1 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBox_F2 = new System.Windows.Forms.ToolStripTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,7 +70,9 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBox_Harmonics = new System.Windows.Forms.ToolStripTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.chart_Wave)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -80,47 +86,47 @@
             this.serialPort1.BaudRate = 19200;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
-            // chart1
+            // chart_Wave
             // 
-            chartArea1.AxisY.Maximum = 1024D;
-            chartArea1.AxisY.Minimum = -1024D;
-            chartArea1.InnerPlotPosition.Auto = false;
-            chartArea1.InnerPlotPosition.Height = 100F;
-            chartArea1.InnerPlotPosition.Width = 100F;
-            chartArea1.Name = "ChartArea1";
-            chartArea1.Position.Auto = false;
-            chartArea1.Position.Height = 100F;
-            chartArea1.Position.Width = 100F;
-            this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(0, 0);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Legend = "Legend1";
-            series1.Name = "Acc";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Legend = "Legend1";
-            series2.Name = "Series2";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Legend = "Legend1";
-            series3.Name = "Spikes";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series4.Legend = "Legend1";
-            series4.Name = "Series4";
-            this.chart1.Series.Add(series1);
-            this.chart1.Series.Add(series2);
-            this.chart1.Series.Add(series3);
-            this.chart1.Series.Add(series4);
-            this.chart1.Size = new System.Drawing.Size(430, 349);
-            this.chart1.TabIndex = 1;
-            this.chart1.Text = "chart1";
-            this.chart1.Click += new System.EventHandler(this.chart1_Click);
+            chartArea2.AxisY.Maximum = 1024D;
+            chartArea2.AxisY.Minimum = -1024D;
+            chartArea2.InnerPlotPosition.Auto = false;
+            chartArea2.InnerPlotPosition.Height = 100F;
+            chartArea2.InnerPlotPosition.Width = 100F;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.Position.Auto = false;
+            chartArea2.Position.Height = 100F;
+            chartArea2.Position.Width = 100F;
+            this.chart_Wave.ChartAreas.Add(chartArea2);
+            this.chart_Wave.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend2.Name = "Legend1";
+            this.chart_Wave.Legends.Add(legend2);
+            this.chart_Wave.Location = new System.Drawing.Point(0, 0);
+            this.chart_Wave.Name = "chart_Wave";
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Legend = "Legend1";
+            series5.Name = "Acc";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series6.Legend = "Legend1";
+            series6.Name = "Series2";
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series7.Legend = "Legend1";
+            series7.Name = "Spikes";
+            series8.ChartArea = "ChartArea1";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series8.Legend = "Legend1";
+            series8.Name = "Series4";
+            this.chart_Wave.Series.Add(series5);
+            this.chart_Wave.Series.Add(series6);
+            this.chart_Wave.Series.Add(series7);
+            this.chart_Wave.Series.Add(series8);
+            this.chart_Wave.Size = new System.Drawing.Size(473, 387);
+            this.chart_Wave.TabIndex = 1;
+            this.chart_Wave.Text = "chart1";
+            this.chart_Wave.Click += new System.EventHandler(this.chart_Wave_Click);
             // 
             // timer1
             // 
@@ -133,10 +139,10 @@
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel3,
-            this.toolStripStatusLabel4});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 374);
+            this.toolStripStatusLabel_Freq});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 412);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(649, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(712, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -163,15 +169,15 @@
             this.toolStripStatusLabel3.Text = "Frequency:";
             this.toolStripStatusLabel3.Click += new System.EventHandler(this.toolStripStatusLabel3_Click);
             // 
-            // toolStripStatusLabel4
+            // toolStripStatusLabel_Freq
             // 
-            this.toolStripStatusLabel4.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.toolStripStatusLabel4.ForeColor = System.Drawing.Color.Green;
-            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Size = new System.Drawing.Size(131, 17);
-            this.toolStripStatusLabel4.Text = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Click += new System.EventHandler(this.toolStripStatusLabel4_Click);
-            this.toolStripStatusLabel4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripStatusLabel4_MouseDown);
+            this.toolStripStatusLabel_Freq.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.toolStripStatusLabel_Freq.ForeColor = System.Drawing.Color.Green;
+            this.toolStripStatusLabel_Freq.Name = "toolStripStatusLabel_Freq";
+            this.toolStripStatusLabel_Freq.Size = new System.Drawing.Size(131, 17);
+            this.toolStripStatusLabel_Freq.Text = "toolStripStatusLabel4";
+            this.toolStripStatusLabel_Freq.Click += new System.EventHandler(this.toolStripStatusLabel4_Click);
+            this.toolStripStatusLabel_Freq.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripStatusLabel4_MouseDown);
             // 
             // toolStrip1
             // 
@@ -186,10 +192,16 @@
             this.toolStripTextBox1,
             this.toolStripTextBox2,
             this.toolStripComboBox1,
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolStripLabel1,
+            this.toolStripTextBox_F1,
+            this.toolStripLabel2,
+            this.toolStripTextBox_F2,
+            this.toolStripLabel3,
+            this.toolStripTextBox_Harmonics});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(649, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(712, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -288,12 +300,33 @@
             // toolStripButton1
             // 
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Enabled = false;
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(39, 22);
+            this.toolStripLabel1.Text = "频点1";
+            // 
+            // toolStripTextBox_F1
+            // 
+            this.toolStripTextBox_F1.Name = "toolStripTextBox_F1";
+            this.toolStripTextBox_F1.Size = new System.Drawing.Size(100, 25);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(39, 22);
+            this.toolStripLabel2.Text = "频点2";
+            // 
+            // toolStripTextBox_F2
+            // 
+            this.toolStripTextBox_F2.Name = "toolStripTextBox_F2";
+            this.toolStripTextBox_F2.Size = new System.Drawing.Size(100, 23);
             // 
             // splitContainer1
             // 
@@ -307,9 +340,9 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.chart1);
-            this.splitContainer1.Size = new System.Drawing.Size(649, 349);
-            this.splitContainer1.SplitterDistance = 215;
+            this.splitContainer1.Panel2.Controls.Add(this.chart_Wave);
+            this.splitContainer1.Size = new System.Drawing.Size(712, 387);
+            this.splitContainer1.SplitterDistance = 235;
             this.splitContainer1.TabIndex = 4;
             // 
             // listView1
@@ -324,10 +357,10 @@
             this.columnHeader6});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(215, 349);
+            this.listView1.Size = new System.Drawing.Size(235, 387);
             this.listView1.TabIndex = 0;
             this.listView1.TileSize = new System.Drawing.Size(50, 50);
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -370,11 +403,22 @@
             this.columnHeader6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader6.Width = 88;
             // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(56, 17);
+            this.toolStripLabel3.Text = "谐波差数";
+            // 
+            // toolStripTextBox_Harmonics
+            // 
+            this.toolStripTextBox_Harmonics.Name = "toolStripTextBox_Harmonics";
+            this.toolStripTextBox_Harmonics.Size = new System.Drawing.Size(100, 23);
+            // 
             // ViberationScope
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 396);
+            this.ClientSize = new System.Drawing.Size(712, 434);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
@@ -383,7 +427,7 @@
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart_Wave)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -400,7 +444,7 @@
         #endregion
 
         private System.IO.Ports.SerialPort serialPort1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart_Wave;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
@@ -425,8 +469,14 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_Freq;
         public System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox_F1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox_F2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox_Harmonics;
     }
 }
 
