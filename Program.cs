@@ -15,7 +15,7 @@ namespace ViberationScope
         {
             Application.EnableVisualStyles();//应用程序启用可视化应用程序
             Application.SetCompatibleTextRenderingDefault(false);//使用GDI方式显示文本
-            Application.Run(new Form1());//运行窗口
+            Application.Run(new ViberationScope());//运行窗口
         }
     }
 }

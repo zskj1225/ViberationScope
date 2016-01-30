@@ -10,10 +10,14 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Numerics;
 using System.Net.Sockets;
+//
+using NativeWifi;
+using System.Runtime.InteropServices;
+//
 
 namespace ViberationScope
 {
-    public partial class Form1 : Form
+    public partial class ViberationScope : Form
     {
         UInt32 numPointPerLine = 1024;
         double[,] chartData;
@@ -37,7 +41,11 @@ namespace ViberationScope
         System.IO.FileStream fsRawData;
         Queue<double> sampleQ = new Queue<double>();//
         ShiftBuffer<double> spikes;
-        public Form1()
+        //
+        [DllImport("wininet.dll")]
+        public static extern bool InternetGetConnectedState(out long lpdwFlags, long dwReserved);
+        //
+        public ViberationScope()
         {
             InitializeComponent();
         }
@@ -66,9 +74,19 @@ namespace ViberationScope
             toolStripButton_Stop_Click(sender, e);
             SystemSetup.getInstance().save();
         }
-
+        //kai
+        System.Windows.Forms.Timer timerTmp = new System.Windows.Forms.Timer();
+        //jie
         private void Form1_Load(object sender, EventArgs e)
         {
+            //kai
+            timerTmp.Interval = 1000;//一秒
+            timerTmp.Tick += new EventHandler(timerTmp_Tick);
+
+
+
+            timerTmp.Enabled = true;
+            //jie
             toolStripComboBox1.SelectedIndex = toolStripComboBox1.Items.Count / 2;
             SystemSetup.getInstance().init();
             try
@@ -91,10 +109,77 @@ namespace ViberationScope
                 originalData = wd;
                 originalData.onEvent += new TimerCallback(onStopMeasure);
                 //toolStripButton_Start_Click(this, null);
+
             }
             catch (Exception ex) { }
             timer1.Enabled = true;
         }
+
+        //kai
+        Wlan.WlanAvailableNetwork[] wlanAvailableNetworks;
+        private void refresh()
+        {
+            listView1.Items.Clear();
+            WlanClient wlanClientTmp = new WlanClient();
+            if (wlanClientTmp.Interfaces.Length != 0)
+            {
+                WlanClient.WlanInterface wlanInterfaceTmp = wlanClientTmp.Interfaces[0];
+                Wlan.WlanAvailableNetwork[] wlanAvailableNetworksTmp
+                    = wlanInterfaceTmp.GetAvailableNetworkList(Wlan.WlanGetAvailableNetworkFlags.IncludeAllAdhocProfiles);
+                wlanAvailableNetworks = wlanAvailableNetworksTmp;
+                int i = 1;
+                foreach (Wlan.WlanAvailableNetwork wlanAvailableNetworkTmp in wlanAvailableNetworksTmp)
+                {
+                    ListViewItem lviTmp = new ListViewItem(
+                        new string[]{
+                        (i++).ToString(),
+                        GetStringForSSID(wlanAvailableNetworkTmp.dot11Ssid),
+                        wlanAvailableNetworkTmp.wlanSignalQuality.ToString() + "%",
+                        wlanAvailableNetworkTmp.networkConnectable.ToString(),
+                        wlanAvailableNetworkTmp.securityEnabled.ToString(),
+                        Convert.ToInt64(wlanAvailableNetworkTmp.flags).ToString()
+                        }
+                    );
+                    listView1.Items.Add(lviTmp);
+                }
+            }
+        }
+        private void timerTmp_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                timerTmp.Interval = 60000;
+                refresh();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+        }
+      /*  private void button刷新列表_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                refresh();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+        }*/
+
+
+        //jie
+        //kai
+        private void wlanInterfaceTmp_WlanConnectionNotification(Wlan.WlanNotificationData notifyData, Wlan.WlanConnectionNotificationData connNotifyData)
+        {
+            if (connNotifyData.profileName != "")
+            {
+                toolStripStatusLabel1.Text = "已连接至：" + connNotifyData.profileName;
+            }
+        }
+        //jie
+
 
         private void setupCOM()
         {
@@ -276,6 +361,70 @@ namespace ViberationScope
             }
         }
 
+        static string GetStringForSSID(Wlan.Dot11Ssid ssid)
+        {
+            return Encoding.ASCII.GetString(ssid.SSID, 0, (int)ssid.SSIDLength);
+        }
+
+        
+        private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            //kai    
+
+
+
+
+
+            try
+            {
+                WlanClient wlanClientTmp = new WlanClient();
+
+                if (wlanClientTmp.Interfaces.Length != 0)
+                {
+                    WlanClient.WlanInterface wlanInterfaceTmp = wlanClientTmp.Interfaces[0];
+                    wlanInterfaceTmp.WlanConnectionNotification += new WlanClient.WlanInterface.WlanConnectionNotificationEventHandler(wlanInterfaceTmp_WlanConnectionNotification);
+
+                    int index = listView1.Items.IndexOf(listView1.SelectedItems[0]);
+                    wlanInterfaceTmp.Connect(Wlan.WlanConnectionMode.Profile, wlanAvailableNetworks[index].dot11BssType, wlanAvailableNetworks[index].profileName);
+
+                    toolStripStatusLabel1.Text = "正在连接网络：" + wlanAvailableNetworks[index].profileName;
+                }
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+
+            //jie
+
+        }
+
+        private void toolStripStatusLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripStatusLabel3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripStatusLabel4_MouseDown(object sender, MouseEventArgs e)
+        {
+                       
+        }
+
+        private void toolStripStatusLabel4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+     
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             chart1.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
@@ -284,7 +433,18 @@ namespace ViberationScope
 
         private void toolStripButton_Config_Click(object sender, EventArgs e)
         {
-            FormConfig frmConfig = new FormConfig();
+
+
+            try
+            {
+                refresh();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+
+            /*FormConfig frmConfig = new FormConfig();
             if (frmConfig.ShowDialog() == DialogResult.OK)
             {
                 if (frmConfig.dataSrc == DataSource.File)
@@ -306,7 +466,7 @@ namespace ViberationScope
                     originalData = wd;//抽样样例数据
                 }
                 originalData.onEvent += new TimerCallback(onStopMeasure);
-            }
+            }*/
         }
     }
     class sampleData
@@ -449,4 +609,7 @@ namespace ViberationScope
         }
 
     }
+    
+
+
 }
