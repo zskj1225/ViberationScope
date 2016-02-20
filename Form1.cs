@@ -251,11 +251,11 @@ namespace ViberationScope
             System.Numerics.Complex[] newfft = DSP.FFT(inArr);
             for (UInt32 i = index; i < numPointPerLine; i++)
             {
-                chart_Wave.Series[0].Points.Add(chartData[0,i]);
+                chart_Wave.Series[0].Points.Add(chartData[0,i] + 200);
             }
             for (int i = 0; i < index; i++)
             {
-                chart_Wave.Series[0].Points.Add(chartData[0,i]);
+                chart_Wave.Series[0].Points.Add(chartData[0,i]+200);
             }
             for (int i = 0; i < numPointPerLine; i++)
             {
@@ -263,7 +263,7 @@ namespace ViberationScope
             }
             for (int i = 0; i < fft_mag.Length; i++)
             {
-                chart_Wave.Series[1].Points.Add(fft_mag[i] / 4 - 20);
+                chart_Wave.Series[1].Points.Add(fft_mag[i] / 4 - 100);
             }
             lock (sampleQ)
             {
@@ -461,26 +461,14 @@ namespace ViberationScope
             System.Console.WriteLine(e.NewPosition);
         }
 
-        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            chart_Wave.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
-            chart_Wave.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
+
         }
 
-        private void toolStripButton_Config_Click(object sender, EventArgs e)
+        private void toolStripButton2_Click(object sender, EventArgs e)
         {
-
-
-            try
-            {
-                refresh();
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
-
-            /*FormConfig frmConfig = new FormConfig();
+            FormConfig frmConfig = new FormConfig();
             if (frmConfig.ShowDialog() == DialogResult.OK)
             {
                 if (frmConfig.dataSrc == DataSource.File)
@@ -502,8 +490,31 @@ namespace ViberationScope
                     originalData = wd;//抽样样例数据
                 }
                 originalData.onEvent += new TimerCallback(onStopMeasure);
-            }*/
+            }
         }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            chart_Wave.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
+            chart_Wave.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
+        }
+
+        private void toolStripButton_Config_Click(object sender, EventArgs e)
+        {
+
+
+            try
+            {
+                refresh();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+
+           
+        }
+    
     }
     class sampleData
     {

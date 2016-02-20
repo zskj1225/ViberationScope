@@ -54,6 +54,7 @@
             this.toolStripButton_Save = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton_Config = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
@@ -62,6 +63,8 @@
             this.toolStripTextBox_F1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBox_F2 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBox_Harmonics = new System.Windows.Forms.ToolStripTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -70,8 +73,6 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripTextBox_Harmonics = new System.Windows.Forms.ToolStripTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart_Wave)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -189,6 +190,7 @@
             this.toolStripButton_Save,
             this.toolStripSeparator2,
             this.toolStripButton_Config,
+            this.toolStripButton2,
             this.toolStripTextBox1,
             this.toolStripTextBox2,
             this.toolStripComboBox1,
@@ -268,6 +270,16 @@
             this.toolStripButton_Config.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.toolStripButton_Config.Click += new System.EventHandler(this.toolStripButton_Config_Click);
             // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton2.Text = "参数数据";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
             // toolStripTextBox1
             // 
             this.toolStripTextBox1.Name = "toolStripTextBox1";
@@ -305,6 +317,7 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // toolStripLabel1
             // 
@@ -327,6 +340,17 @@
             // 
             this.toolStripTextBox_F2.Name = "toolStripTextBox_F2";
             this.toolStripTextBox_F2.Size = new System.Drawing.Size(100, 23);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(56, 17);
+            this.toolStripLabel3.Text = "谐波差数";
+            // 
+            // toolStripTextBox_Harmonics
+            // 
+            this.toolStripTextBox_Harmonics.Name = "toolStripTextBox_Harmonics";
+            this.toolStripTextBox_Harmonics.Size = new System.Drawing.Size(100, 23);
             // 
             // splitContainer1
             // 
@@ -403,17 +427,6 @@
             this.columnHeader6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader6.Width = 88;
             // 
-            // toolStripLabel3
-            // 
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(56, 17);
-            this.toolStripLabel3.Text = "谐波差数";
-            // 
-            // toolStripTextBox_Harmonics
-            // 
-            this.toolStripTextBox_Harmonics.Name = "toolStripTextBox_Harmonics";
-            this.toolStripTextBox_Harmonics.Size = new System.Drawing.Size(100, 23);
-            // 
             // ViberationScope
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -424,7 +437,6 @@
             this.Controls.Add(this.statusStrip1);
             this.Name = "ViberationScope";
             this.Text = "Viberation";
-            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart_Wave)).EndInit();
@@ -477,6 +489,7 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox_F2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox_Harmonics;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }
 
