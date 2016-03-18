@@ -13,6 +13,12 @@ using System.Net.Sockets;
 //
 using NativeWifi;
 using System.Runtime.InteropServices;
+
+using System.Data.SqlClient;
+using System.IO;
+
+
+
 //
 
 namespace ViberationScope
@@ -36,6 +42,7 @@ namespace ViberationScope
         Boolean isRunning = false;
         BlockingCircularBuffer<byte> buf1;
         sampleData originalData = new COMData();//抽样数据
+        Post_Wire selectedPostWire = new Post_Wire();
 
         object originalDataDevice;
         System.IO.FileStream fsRawData;
@@ -53,11 +60,14 @@ namespace ViberationScope
         private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             System.IO.Ports.SerialPort sp = sender as System.IO.Ports.SerialPort;
+
+           // System.IO.FileStream fs = System.IO.File.OpenRead(ofd.FileName);
             lock (sp)
             {
                 while (sp.BytesToRead > 0)//所记录接受数据值大于0
                 {
                     byte b = (byte)sp.ReadByte();//读取缓冲数据
+
                     buf1.Put(b);
                     fsRawData.WriteByte(b);//用于只写
                 }
@@ -87,7 +97,7 @@ namespace ViberationScope
 
             timerTmp.Enabled = true;
             //jie
-            toolStripComboBox1.SelectedIndex = toolStripComboBox1.Items.Count / 2;
+            Multiple_ComboBox.SelectedIndex = Multiple_ComboBox.Items.Count / 2;
             SystemSetup.getInstance().init();
             try
             {
@@ -119,7 +129,7 @@ namespace ViberationScope
         Wlan.WlanAvailableNetwork[] wlanAvailableNetworks;
         private void refresh()
         {
-            listView1.Items.Clear();
+            Wifi_list.Items.Clear();
             WlanClient wlanClientTmp = new WlanClient();
             if (wlanClientTmp.Interfaces.Length != 0)
             {
@@ -127,20 +137,26 @@ namespace ViberationScope
                 Wlan.WlanAvailableNetwork[] wlanAvailableNetworksTmp
                     = wlanInterfaceTmp.GetAvailableNetworkList(Wlan.WlanGetAvailableNetworkFlags.IncludeAllAdhocProfiles);
                 wlanAvailableNetworks = wlanAvailableNetworksTmp;
-                int i = 1;
+                int i = 0;
                 foreach (Wlan.WlanAvailableNetwork wlanAvailableNetworkTmp in wlanAvailableNetworksTmp)
+                {
+                    String ssid = GetStringForSSID(wlanAvailableNetworkTmp.dot11Ssid);
+                    if (!ssid.StartsWith("ZSKJ")) continue;
+                    if (wlanAvailableNetworkTmp.profileName.Length==0) continue;
+                    wlanAvailableNetworks[i++] = wlanAvailableNetworkTmp;
+                }
+                Array.Resize(ref wlanAvailableNetworks, i);
+                foreach (Wlan.WlanAvailableNetwork wlanAvailableNetworkTmp in wlanAvailableNetworks)
                 {
                     ListViewItem lviTmp = new ListViewItem(
                         new string[]{
-                        (i++).ToString(),
                         GetStringForSSID(wlanAvailableNetworkTmp.dot11Ssid),
                         wlanAvailableNetworkTmp.wlanSignalQuality.ToString() + "%",
                         wlanAvailableNetworkTmp.networkConnectable.ToString(),
-                        wlanAvailableNetworkTmp.securityEnabled.ToString(),
                         Convert.ToInt64(wlanAvailableNetworkTmp.flags).ToString()
                         }
                     );
-                    listView1.Items.Add(lviTmp);
+                    Wifi_list.Items.Add(lviTmp);
                 }
             }
         }
@@ -156,29 +172,15 @@ namespace ViberationScope
                 MessageBox.Show(exp.Message);
             }
         }
-      /*  private void button刷新列表_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                refresh();
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
-        }*/
-
-
-        //jie
-        //kai
+    
         private void wlanInterfaceTmp_WlanConnectionNotification(Wlan.WlanNotificationData notifyData, Wlan.WlanConnectionNotificationData connNotifyData)
         {
             if (connNotifyData.profileName != "")
             {
-                toolStripStatusLabel1.Text = "已连接至：" + connNotifyData.profileName;
+                Vibrator_label.Text = "已连接至：" + connNotifyData.profileName;
             }
         }
-        //jie
+
 
 
         private void setupCOM()
@@ -276,10 +278,73 @@ namespace ViberationScope
             {
                 chart_Wave.Series[2].Points.Add(spikes.ElementAt(i) / 4 - 20);
             }
-            float f1, f2, diff;
-            if(float.TryParse(toolStripTextBox_F1.Text,out f1) && float.TryParse(toolStripTextBox_F2.Text, out f2) && float.TryParse(toolStripTextBox_Harmonics.Text, out diff) && diff != 0) {
-                toolStripStatusLabel_Freq.Text = ((f2 - f1) / diff).ToString();
+            float  F, f1, f2, diff;
+            if (float.TryParse(Frequency_box1.Text, out f1) && float.TryParse(Frequency_box2.Text, out f2) && float.TryParse(Wavedifference_box.Text, out diff) && diff != 0)
+            {                //f0= ((f2 - f1) / diff.ToString();
+                F = calculat((f2 - f1) / diff);
+                Force_label.Text = F.ToString();
+            }  
+
+                   
+        }
+
+        private float calculat(float v)
+        {
+            double  F = 0;
+            double g = 9.80665;
+            double ρ, D, l, θ, H, E = 181000;
+
+            l = selectedPostWire.thePost.H / Math.Sin(selectedPostWire.thePost.theta*Math.PI/180);
+            //导入拉线表数据
+            D = selectedPostWire.theWire.D;
+            ρ = selectedPostWire.theWire.rho;
+            if (selectedPostWire.thePost.type.Equals("LV型"))
+            {
+                double h0 = 4 * ρ * v * v * l * l;
+                double N,h,h1,L;
+                do
+                {
+                   
+                     h1 = Math.Pow(ρ * l * l * ((4 * v * v * h0 * h0) - 7.569 * ρ * E * Math.PI * D * D / 4),1.0/3);
+                     N =Math.Abs( 100 * (h1 - h0) / h0);
+                     h0 = h1;
+                     
+                }
+                while (N > 0.01);
+                 h = h1;
+                 L = l*(1+(1/8)*(ρ*g*l/h)*(ρ*g*l/h));
+                double X = (Math.Pow((ρ * g * l * l / h), 2)) * ((E * l) / (h * L)) * Math.PI * D * D / 4;
+                System.Console.WriteLine("ρ:{0} l:{1} h:{2} X:{3}", ρ, l, h, X);
+                if (X<=0.17)
+                {
+                    F = 4 * ρ * l * l * v * v;
+                }
+                else if (X>0.17&&X<4*Math.PI*Math.PI)
+                {
+                    double F0 =4 * ρ * l * l * v * v;
+                    double F1;
+                    double Y;
+                    do
+                    {
+                        F1 = Math.Pow(ρ * l * l * (4 * v * v * F0 * F0 - 7.569 * ρ * E * Math.PI * D * D / 4), 1.0 / 3);
+                        Y = 100 * (F1 - F0) / F0;
+                        F0 = F1;
+                    }
+                    while (Y > 0.01);
+                    F = F1;
+                }
+                else if(X>=4*Math.PI*Math.PI) 
+                {
+                    F=ρ*l*l * v * v;
+                }
+
             }
+            else
+            {
+                F = ρ*l*l*v*v-(4*Math.PI* Math.PI / (l*l))*E*(Math.PI*D*D*D*D/32);
+
+            }
+            return (float)F;
         }
 
         private void toolStripButton_Start_Click(object sender, EventArgs e)
@@ -311,8 +376,10 @@ namespace ViberationScope
             if (DialogResult.OK == ofd.ShowDialog())
             {
                 System.IO.FileStream fs = System.IO.File.OpenRead(ofd.FileName);
+               // System.IO.FileStream fsRawData=System.IO.File.OpenRead(ofd.FileName);
                 byte[] buf = new byte[frameLen] { 0, 0, 0 };
                 while (fs.Position < fs.Length)
+                //while (fsRawData.Position < fsRawData.Length)
                 {
                     if (buf[0] == 0xA5)
                     {
@@ -320,7 +387,8 @@ namespace ViberationScope
                         chartData[0,index] = BitConverter.ToInt16(buf, 1);
                         for (int i = 0; i < frameLen; i++)
                         {
-                            buf[i] = (byte)fs.ReadByte();
+                            buf[i] = (byte)fsRawData.ReadByte();
+                        
                         }
                     }
                     else
@@ -329,7 +397,7 @@ namespace ViberationScope
                         {
                             buf[i] = buf[i + 1];
                         }
-                        buf[frameLen - 1] = (byte)fs.ReadByte();
+                        buf[frameLen - 1] = (byte)fsRawData.ReadByte();
                     }
                 }
             }
@@ -399,10 +467,10 @@ namespace ViberationScope
                     WlanClient.WlanInterface wlanInterfaceTmp = wlanClientTmp.Interfaces[0];
                     wlanInterfaceTmp.WlanConnectionNotification += new WlanClient.WlanInterface.WlanConnectionNotificationEventHandler(wlanInterfaceTmp_WlanConnectionNotification);
 
-                    int index = listView1.Items.IndexOf(listView1.SelectedItems[0]);
+                    int index = Wifi_list.Items.IndexOf(Wifi_list.SelectedItems[0]);
                     wlanInterfaceTmp.Connect(Wlan.WlanConnectionMode.Profile, wlanAvailableNetworks[index].dot11BssType, wlanAvailableNetworks[index].profileName);
 
-                    toolStripStatusLabel1.Text = "正在连接网络：" + wlanAvailableNetworks[index].profileName;
+                    Vibrator_label.Text = "正在连接网络：" + wlanAvailableNetworks[index].profileName;
                 }
             }
             catch (Exception exp)
@@ -414,25 +482,6 @@ namespace ViberationScope
 
         }
 
-        private void toolStripStatusLabel2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripStatusLabel3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripStatusLabel4_MouseDown(object sender, MouseEventArgs e)
-        {
-                       
-        }
-
-        private void toolStripStatusLabel4_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void chart_Wave_Click(object sender, EventArgs e)
         {
@@ -443,12 +492,12 @@ namespace ViberationScope
             if (marks.Count == 0)
             {
                 marks.Add(me.X);
-                toolStripTextBox_F1.Text = f.ToString();
+                Frequency_box1.Text = f.ToString();
             }
             else if (marks.Count == 1)
             {
                 marks.Add(me.X);
-                toolStripTextBox_F2.Text = f.ToString();
+                Frequency_box2.Text = f.ToString();
             }
             else
             {
@@ -461,42 +510,30 @@ namespace ViberationScope
             System.Console.WriteLine(e.NewPosition);
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+       private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
+            FormConfig fcf = new FormConfig();
+            if (fcf.ShowDialog() == DialogResult.OK)
+            {
+                
+            }
         }
-
+        
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            FormConfig frmConfig = new FormConfig();
-            if (frmConfig.ShowDialog() == DialogResult.OK)
+            Data_Choice frmParams = new Data_Choice();
+            frmParams.thePostWire = selectedPostWire;
+            if (frmParams.ShowDialog() == DialogResult.OK)
             {
-                if (frmConfig.dataSrc == DataSource.File)
-                {
-                    FileData fd = new FileData();
-                    fd.buf1 = buf1;
-                    originalDataDevice = frmConfig.dataSrcName;
-                    originalData = fd;
-                }
-                else if (frmConfig.dataSrc == DataSource.COM)
-                {
-                    originalData = new COMData();
-                    originalDataDevice = serialPort1;
-                }
-                else if (frmConfig.dataSrc == DataSource.WIFI)
-                {
-                    WifiData wd = new WifiData();
-                    wd.buf1 = buf1;
-                    originalData = wd;//抽样样例数据
-                }
-                originalData.onEvent += new TimerCallback(onStopMeasure);
             }
         }
 
+    
+
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            chart_Wave.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
-            chart_Wave.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, toolStripComboBox1.SelectedIndex);
+            chart_Wave.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, Multiple_ComboBox.SelectedIndex);
+            chart_Wave.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, Multiple_ComboBox.SelectedIndex);
         }
 
         private void toolStripButton_Config_Click(object sender, EventArgs e)
@@ -514,7 +551,23 @@ namespace ViberationScope
 
            
         }
-    
+
+        internal class firstDataSet2TableAdapters
+        {
+            internal class Table_PostTableAdapter
+            {
+                internal bool ClearBeforeFill;
+
+                public Table_PostTableAdapter()
+                {
+                }
+
+                internal void Fill(object table_Post)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
     }
     class sampleData
     {
@@ -544,7 +597,7 @@ namespace ViberationScope
         }
         public override void Stop()
         {
-            lock (thePort)
+            lock (thePort)//爆错
             {
                 thePort.Close();
             }
@@ -575,7 +628,11 @@ namespace ViberationScope
             get { return _Text; }
         }
         void loadData(object o)
+
         {
+
+
+            
             string filename = o as string;
             System.IO.FileStream fs = System.IO.File.OpenRead(filename);
             byte b = 0;
@@ -627,10 +684,26 @@ namespace ViberationScope
             System.Net.IPEndPoint _ep = new System.Net.IPEndPoint(_addr, 8000);
             s.Send(new byte[] { 0xaa }, 1, _ep);
             isRunning = true;
+
+            //读取exsel表
+           
+
+
+             
+        
+
+
+
+
             try
             {
                 while (isRunning == true)
                 {
+                   
+
+
+
+
                     byte[] recvBuf = s.Receive(ref _ep);
                     int pos = 0;
                     byte[] package = new byte[100];
@@ -655,8 +728,9 @@ namespace ViberationScope
             onEvent("Stopped");
         }
 
+       
+
     }
-    
 
 
 }

@@ -20,17 +20,17 @@ namespace ViberationScope {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("firstDataSet")]
+    [global::System.Xml.Serialization.XmlRootAttribute("ds")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class firstDataSet : global::System.Data.DataSet {
+    public partial class ds : global::System.Data.DataSet {
         
-        private Table_WireDataTable tableTable_Wire;
+        private Table_PostDataTable tableTable_Post;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public firstDataSet() {
+        public ds() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -41,7 +41,7 @@ namespace ViberationScope {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected firstDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected ds(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -54,8 +54,8 @@ namespace ViberationScope {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["Table_Wire"] != null)) {
-                    base.Tables.Add(new Table_WireDataTable(ds.Tables["Table_Wire"]));
+                if ((ds.Tables["Table_Post"] != null)) {
+                    base.Tables.Add(new Table_PostDataTable(ds.Tables["Table_Post"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +79,9 @@ namespace ViberationScope {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public Table_WireDataTable Table_Wire {
+        public Table_PostDataTable Table_Post {
             get {
-                return this.tableTable_Wire;
+                return this.tableTable_Post;
             }
         }
         
@@ -127,7 +127,7 @@ namespace ViberationScope {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            firstDataSet cln = ((firstDataSet)(base.Clone()));
+            ds cln = ((ds)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -152,8 +152,8 @@ namespace ViberationScope {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["Table_Wire"] != null)) {
-                    base.Tables.Add(new Table_WireDataTable(ds.Tables["Table_Wire"]));
+                if ((ds.Tables["Table_Post"] != null)) {
+                    base.Tables.Add(new Table_PostDataTable(ds.Tables["Table_Post"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +188,10 @@ namespace ViberationScope {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableTable_Wire = ((Table_WireDataTable)(base.Tables["Table_Wire"]));
+            this.tableTable_Post = ((Table_PostDataTable)(base.Tables["Table_Post"]));
             if ((initTable == true)) {
-                if ((this.tableTable_Wire != null)) {
-                    this.tableTable_Wire.InitVars();
+                if ((this.tableTable_Post != null)) {
+                    this.tableTable_Post.InitVars();
                 }
             }
         }
@@ -199,18 +199,18 @@ namespace ViberationScope {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "firstDataSet";
+            this.DataSetName = "ds";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/firstDataSet.xsd";
+            this.Namespace = "http://tempuri.org/ds.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableTable_Wire = new Table_WireDataTable();
-            base.Tables.Add(this.tableTable_Wire);
+            this.tableTable_Post = new Table_PostDataTable();
+            base.Tables.Add(this.tableTable_Post);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializeTable_Wire() {
+        private bool ShouldSerializeTable_Post() {
             return false;
         }
         
@@ -225,7 +225,7 @@ namespace ViberationScope {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            firstDataSet ds = new firstDataSet();
+            ds ds = new ds();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -270,21 +270,21 @@ namespace ViberationScope {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void Table_WireRowChangeEventHandler(object sender, Table_WireRowChangeEvent e);
+        public delegate void Table_PostRowChangeEventHandler(object sender, Table_PostRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class Table_WireDataTable : global::System.Data.TypedTableBase<Table_WireRow> {
+        public partial class Table_PostDataTable : global::System.Data.TypedTableBase<Table_PostRow> {
             
-            private global::System.Data.DataColumn columnType;
+            private global::System.Data.DataColumn columnName;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_WireDataTable() {
-                this.TableName = "Table_Wire";
+            public Table_PostDataTable() {
+                this.TableName = "Table_Post";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -292,7 +292,7 @@ namespace ViberationScope {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal Table_WireDataTable(global::System.Data.DataTable table) {
+            internal Table_PostDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -309,16 +309,16 @@ namespace ViberationScope {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected Table_WireDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected Table_PostDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn TypeColumn {
+            public global::System.Data.DataColumn NameColumn {
                 get {
-                    return this.columnType;
+                    return this.columnName;
                 }
             }
             
@@ -333,45 +333,45 @@ namespace ViberationScope {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_WireRow this[int index] {
+            public Table_PostRow this[int index] {
                 get {
-                    return ((Table_WireRow)(this.Rows[index]));
+                    return ((Table_PostRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event Table_WireRowChangeEventHandler Table_WireRowChanging;
+            public event Table_PostRowChangeEventHandler Table_PostRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event Table_WireRowChangeEventHandler Table_WireRowChanged;
+            public event Table_PostRowChangeEventHandler Table_PostRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event Table_WireRowChangeEventHandler Table_WireRowDeleting;
+            public event Table_PostRowChangeEventHandler Table_PostRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event Table_WireRowChangeEventHandler Table_WireRowDeleted;
+            public event Table_PostRowChangeEventHandler Table_PostRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddTable_WireRow(Table_WireRow row) {
+            public void AddTable_PostRow(Table_PostRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_WireRow AddTable_WireRow(string Type) {
-                Table_WireRow rowTable_WireRow = ((Table_WireRow)(this.NewRow()));
+            public Table_PostRow AddTable_PostRow(string Name) {
+                Table_PostRow rowTable_PostRow = ((Table_PostRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Type};
-                rowTable_WireRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowTable_WireRow);
-                return rowTable_WireRow;
+                        Name};
+                rowTable_PostRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowTable_PostRow);
+                return rowTable_PostRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                Table_WireDataTable cln = ((Table_WireDataTable)(base.Clone()));
+                Table_PostDataTable cln = ((Table_PostDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -379,47 +379,47 @@ namespace ViberationScope {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new Table_WireDataTable();
+                return new Table_PostDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnType = base.Columns["Type"];
+                this.columnName = base.Columns["Name"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnType = new global::System.Data.DataColumn("Type", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnType);
-                this.columnType.MaxLength = 50;
+                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnName);
+                this.columnName.MaxLength = 50;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_WireRow NewTable_WireRow() {
-                return ((Table_WireRow)(this.NewRow()));
+            public Table_PostRow NewTable_PostRow() {
+                return ((Table_PostRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new Table_WireRow(builder);
+                return new Table_PostRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(Table_WireRow);
+                return typeof(Table_PostRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.Table_WireRowChanged != null)) {
-                    this.Table_WireRowChanged(this, new Table_WireRowChangeEvent(((Table_WireRow)(e.Row)), e.Action));
+                if ((this.Table_PostRowChanged != null)) {
+                    this.Table_PostRowChanged(this, new Table_PostRowChangeEvent(((Table_PostRow)(e.Row)), e.Action));
                 }
             }
             
@@ -427,8 +427,8 @@ namespace ViberationScope {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.Table_WireRowChanging != null)) {
-                    this.Table_WireRowChanging(this, new Table_WireRowChangeEvent(((Table_WireRow)(e.Row)), e.Action));
+                if ((this.Table_PostRowChanging != null)) {
+                    this.Table_PostRowChanging(this, new Table_PostRowChangeEvent(((Table_PostRow)(e.Row)), e.Action));
                 }
             }
             
@@ -436,8 +436,8 @@ namespace ViberationScope {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.Table_WireRowDeleted != null)) {
-                    this.Table_WireRowDeleted(this, new Table_WireRowChangeEvent(((Table_WireRow)(e.Row)), e.Action));
+                if ((this.Table_PostRowDeleted != null)) {
+                    this.Table_PostRowDeleted(this, new Table_PostRowChangeEvent(((Table_PostRow)(e.Row)), e.Action));
                 }
             }
             
@@ -445,14 +445,14 @@ namespace ViberationScope {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.Table_WireRowDeleting != null)) {
-                    this.Table_WireRowDeleting(this, new Table_WireRowChangeEvent(((Table_WireRow)(e.Row)), e.Action));
+                if ((this.Table_PostRowDeleting != null)) {
+                    this.Table_PostRowDeleting(this, new Table_PostRowChangeEvent(((Table_PostRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemoveTable_WireRow(Table_WireRow row) {
+            public void RemoveTable_PostRow(Table_PostRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -461,7 +461,7 @@ namespace ViberationScope {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                firstDataSet ds = new firstDataSet();
+                ds ds = new ds();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -479,7 +479,7 @@ namespace ViberationScope {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "Table_WireDataTable";
+                attribute2.FixedValue = "Table_PostDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -523,43 +523,43 @@ namespace ViberationScope {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class Table_WireRow : global::System.Data.DataRow {
+        public partial class Table_PostRow : global::System.Data.DataRow {
             
-            private Table_WireDataTable tableTable_Wire;
+            private Table_PostDataTable tableTable_Post;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal Table_WireRow(global::System.Data.DataRowBuilder rb) : 
+            internal Table_PostRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableTable_Wire = ((Table_WireDataTable)(this.Table));
+                this.tableTable_Post = ((Table_PostDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Type {
+            public string Name {
                 get {
                     try {
-                        return ((string)(this[this.tableTable_Wire.TypeColumn]));
+                        return ((string)(this[this.tableTable_Post.NameColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("表“Table_Wire”中列“Type”的值为 DBNull。", e);
+                        throw new global::System.Data.StrongTypingException("表“Table_Post”中列“Name”的值为 DBNull。", e);
                     }
                 }
                 set {
-                    this[this.tableTable_Wire.TypeColumn] = value;
+                    this[this.tableTable_Post.NameColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsTypeNull() {
-                return this.IsNull(this.tableTable_Wire.TypeColumn);
+            public bool IsNameNull() {
+                return this.IsNull(this.tableTable_Post.NameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetTypeNull() {
-                this[this.tableTable_Wire.TypeColumn] = global::System.Convert.DBNull;
+            public void SetNameNull() {
+                this[this.tableTable_Post.NameColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -567,22 +567,22 @@ namespace ViberationScope {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class Table_WireRowChangeEvent : global::System.EventArgs {
+        public class Table_PostRowChangeEvent : global::System.EventArgs {
             
-            private Table_WireRow eventRow;
+            private Table_PostRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_WireRowChangeEvent(Table_WireRow row, global::System.Data.DataRowAction action) {
+            public Table_PostRowChangeEvent(Table_PostRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public Table_WireRow Row {
+            public Table_PostRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -598,7 +598,7 @@ namespace ViberationScope {
         }
     }
 }
-namespace ViberationScope.firstDataSetTableAdapters {
+namespace ViberationScope.dsTableAdapters {
     
     
     /// <summary>
@@ -610,7 +610,7 @@ namespace ViberationScope.firstDataSetTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class Table_WireTableAdapter : global::System.ComponentModel.Component {
+    public partial class Table_PostTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -624,7 +624,7 @@ namespace ViberationScope.firstDataSetTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public Table_WireTableAdapter() {
+        public Table_PostTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -721,14 +721,14 @@ namespace ViberationScope.firstDataSetTableAdapters {
             this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "Table_Wire";
-            tableMapping.ColumnMappings.Add("Type", "Type");
+            tableMapping.DataSetTable = "Table_Post";
+            tableMapping.ColumnMappings.Add("Name", "Name");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[Table_Wire] ([Type]) VALUES (@Type)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[Table_Post] ([Name]) VALUES (@Name)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Type", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Name", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -744,7 +744,7 @@ namespace ViberationScope.firstDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT Type FROM dbo.Table_Wire";
+            this._commandCollection[0].CommandText = "SELECT Name FROM dbo.Table_Post";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -752,7 +752,7 @@ namespace ViberationScope.firstDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(firstDataSet.Table_WireDataTable dataTable) {
+        public virtual int Fill(ds.Table_PostDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -765,9 +765,9 @@ namespace ViberationScope.firstDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual firstDataSet.Table_WireDataTable GetData() {
+        public virtual ds.Table_PostDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            firstDataSet.Table_WireDataTable dataTable = new firstDataSet.Table_WireDataTable();
+            ds.Table_PostDataTable dataTable = new ds.Table_PostDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -775,15 +775,15 @@ namespace ViberationScope.firstDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(firstDataSet.Table_WireDataTable dataTable) {
+        public virtual int Update(ds.Table_PostDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(firstDataSet dataSet) {
-            return this.Adapter.Update(dataSet, "Table_Wire");
+        public virtual int Update(ds dataSet) {
+            return this.Adapter.Update(dataSet, "Table_Post");
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -805,12 +805,12 @@ namespace ViberationScope.firstDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string Type) {
-            if ((Type == null)) {
+        public virtual int Insert(string Name) {
+            if ((Name == null)) {
                 this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(Type));
+                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(Name));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -841,7 +841,7 @@ namespace ViberationScope.firstDataSetTableAdapters {
         
         private UpdateOrderOption _updateOrder;
         
-        private Table_WireTableAdapter _table_WireTableAdapter;
+        private Table_PostTableAdapter _table_PostTableAdapter;
         
         private bool _backupDataSetBeforeUpdate;
         
@@ -863,12 +863,12 @@ namespace ViberationScope.firstDataSetTableAdapters {
         [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
             "ft.VSDesigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3" +
             "a", "System.Drawing.Design.UITypeEditor")]
-        public Table_WireTableAdapter Table_WireTableAdapter {
+        public Table_PostTableAdapter Table_PostTableAdapter {
             get {
-                return this._table_WireTableAdapter;
+                return this._table_PostTableAdapter;
             }
             set {
-                this._table_WireTableAdapter = value;
+                this._table_PostTableAdapter = value;
             }
         }
         
@@ -891,9 +891,9 @@ namespace ViberationScope.firstDataSetTableAdapters {
                 if ((this._connection != null)) {
                     return this._connection;
                 }
-                if (((this._table_WireTableAdapter != null) 
-                            && (this._table_WireTableAdapter.Connection != null))) {
-                    return this._table_WireTableAdapter.Connection;
+                if (((this._table_PostTableAdapter != null) 
+                            && (this._table_PostTableAdapter.Connection != null))) {
+                    return this._table_PostTableAdapter.Connection;
                 }
                 return null;
             }
@@ -908,7 +908,7 @@ namespace ViberationScope.firstDataSetTableAdapters {
         public int TableAdapterInstanceCount {
             get {
                 int count = 0;
-                if ((this._table_WireTableAdapter != null)) {
+                if ((this._table_PostTableAdapter != null)) {
                     count = (count + 1);
                 }
                 return count;
@@ -920,14 +920,14 @@ namespace ViberationScope.firstDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateUpdatedRows(firstDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateUpdatedRows(ds dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._table_WireTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.Table_Wire.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._table_PostTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Table_Post.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._table_WireTableAdapter.Update(updatedRows));
+                    result = (result + this._table_PostTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -939,13 +939,13 @@ namespace ViberationScope.firstDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateInsertedRows(firstDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateInsertedRows(ds dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._table_WireTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.Table_Wire.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._table_PostTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Table_Post.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._table_WireTableAdapter.Update(addedRows));
+                    result = (result + this._table_PostTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -957,13 +957,13 @@ namespace ViberationScope.firstDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateDeletedRows(firstDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+        private int UpdateDeletedRows(ds dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
-            if ((this._table_WireTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.Table_Wire.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._table_PostTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Table_Post.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._table_WireTableAdapter.Update(deletedRows));
+                    result = (result + this._table_PostTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -999,15 +999,15 @@ namespace ViberationScope.firstDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public virtual int UpdateAll(firstDataSet dataSet) {
+        public virtual int UpdateAll(ds dataSet) {
             if ((dataSet == null)) {
                 throw new global::System.ArgumentNullException("dataSet");
             }
             if ((dataSet.HasChanges() == false)) {
                 return 0;
             }
-            if (((this._table_WireTableAdapter != null) 
-                        && (this.MatchTableAdapterConnection(this._table_WireTableAdapter.Connection) == false))) {
+            if (((this._table_PostTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._table_PostTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("由 TableAdapterManager 管理的所有 TableAdapter 必须使用相同的连接字符串。");
             }
             global::System.Data.IDbConnection workConnection = this.Connection;
@@ -1041,13 +1041,13 @@ namespace ViberationScope.firstDataSetTableAdapters {
             try {
                 // ---- Prepare for update -----------
                 //
-                if ((this._table_WireTableAdapter != null)) {
-                    revertConnections.Add(this._table_WireTableAdapter, this._table_WireTableAdapter.Connection);
-                    this._table_WireTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
-                    this._table_WireTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
-                    if (this._table_WireTableAdapter.Adapter.AcceptChangesDuringUpdate) {
-                        this._table_WireTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
-                        adaptersWithAcceptChangesDuringUpdate.Add(this._table_WireTableAdapter.Adapter);
+                if ((this._table_PostTableAdapter != null)) {
+                    revertConnections.Add(this._table_PostTableAdapter, this._table_PostTableAdapter.Connection);
+                    this._table_PostTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._table_PostTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._table_PostTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._table_PostTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._table_PostTableAdapter.Adapter);
                     }
                 }
                 // 
@@ -1108,9 +1108,9 @@ namespace ViberationScope.firstDataSetTableAdapters {
                 if (workConnOpened) {
                     workConnection.Close();
                 }
-                if ((this._table_WireTableAdapter != null)) {
-                    this._table_WireTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._table_WireTableAdapter]));
-                    this._table_WireTableAdapter.Transaction = null;
+                if ((this._table_PostTableAdapter != null)) {
+                    this._table_PostTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._table_PostTableAdapter]));
+                    this._table_PostTableAdapter.Transaction = null;
                 }
                 if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
                     global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];
