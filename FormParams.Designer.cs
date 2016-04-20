@@ -79,8 +79,9 @@
             // button_OK
             // 
             this.button_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button_OK.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.button_OK.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_OK.Location = new System.Drawing.Point(518, 194);
+            this.button_OK.Location = new System.Drawing.Point(203, 316);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(82, 41);
             this.button_OK.TabIndex = 2;
@@ -92,7 +93,7 @@
             // 
             this.button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_Cancel.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Cancel.Location = new System.Drawing.Point(518, 288);
+            this.button_Cancel.Location = new System.Drawing.Point(471, 316);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(82, 41);
             this.button_Cancel.TabIndex = 3;
@@ -126,7 +127,7 @@
             this.Data_wire.Controls.Add(this.wireBox);
             this.Data_wire.Location = new System.Drawing.Point(12, 167);
             this.Data_wire.Name = "Data_wire";
-            this.Data_wire.Size = new System.Drawing.Size(464, 171);
+            this.Data_wire.Size = new System.Drawing.Size(588, 132);
             this.Data_wire.TabIndex = 11;
             this.Data_wire.TabStop = false;
             this.Data_wire.Text = "拉线参数";
@@ -161,6 +162,7 @@
             // 
             this.Wire_dataGridView.AllowUserToAddRows = false;
             this.Wire_dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.Wire_dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Wire_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Wire_dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column3,
@@ -172,7 +174,7 @@
             this.Wire_dataGridView.Location = new System.Drawing.Point(81, 52);
             this.Wire_dataGridView.Name = "Wire_dataGridView";
             this.Wire_dataGridView.RowTemplate.Height = 23;
-            this.Wire_dataGridView.Size = new System.Drawing.Size(367, 119);
+            this.Wire_dataGridView.Size = new System.Drawing.Size(375, 65);
             this.Wire_dataGridView.TabIndex = 12;
             // 
             // Column3
@@ -182,6 +184,7 @@
             this.Column3.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column3.HeaderText = "序号";
             this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
             this.Column3.Width = 70;
             // 
             // Column7
@@ -191,6 +194,7 @@
             this.Column7.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column7.HeaderText = "拉线型号";
             this.Column7.Name = "Column7";
+            this.Column7.ReadOnly = true;
             this.Column7.Width = 60;
             // 
             // Column6
@@ -200,6 +204,7 @@
             this.Column6.DefaultCellStyle = dataGridViewCellStyle3;
             this.Column6.HeaderText = "外径";
             this.Column6.Name = "Column6";
+            this.Column6.ReadOnly = true;
             this.Column6.Width = 70;
             // 
             // Column8
@@ -209,6 +214,7 @@
             this.Column8.DefaultCellStyle = dataGridViewCellStyle4;
             this.Column8.HeaderText = "拉线密度";
             this.Column8.Name = "Column8";
+            this.Column8.ReadOnly = true;
             this.Column8.Width = 60;
             // 
             // Column9
@@ -218,6 +224,7 @@
             this.Column9.DefaultCellStyle = dataGridViewCellStyle5;
             this.Column9.HeaderText = "弹性模量";
             this.Column9.Name = "Column9";
+            this.Column9.ReadOnly = true;
             this.Column9.Width = 60;
             // 
             // Data_Post
@@ -264,7 +271,7 @@
             this.Voltage_listbox.ItemHeight = 12;
             this.Voltage_listbox.Location = new System.Drawing.Point(81, 54);
             this.Voltage_listbox.Name = "Voltage_listbox";
-            this.Voltage_listbox.Size = new System.Drawing.Size(108, 100);
+            this.Voltage_listbox.Size = new System.Drawing.Size(108, 76);
             this.Voltage_listbox.TabIndex = 16;
             this.Voltage_listbox.ValueMember = "Voltage";
             this.Voltage_listbox.SelectedIndexChanged += new System.EventHandler(this.Voltage_listbox_SelectedIndexChanged);
@@ -287,6 +294,7 @@
             this.Post_dataGridView.AllowUserToAddRows = false;
             this.Post_dataGridView.AutoGenerateColumns = false;
             this.Post_dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.Post_dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Post_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Post_dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -295,10 +303,10 @@
             this.Column2,
             this.Column5});
             this.Post_dataGridView.DataSource = this.tablePostBindingSource;
-            this.Post_dataGridView.Location = new System.Drawing.Point(210, 54);
+            this.Post_dataGridView.Location = new System.Drawing.Point(195, 54);
             this.Post_dataGridView.Name = "Post_dataGridView";
             this.Post_dataGridView.RowTemplate.Height = 23;
-            this.Post_dataGridView.Size = new System.Drawing.Size(372, 100);
+            this.Post_dataGridView.Size = new System.Drawing.Size(366, 63);
             this.Post_dataGridView.TabIndex = 14;
             // 
             // Column1
@@ -308,6 +316,7 @@
             this.Column1.DefaultCellStyle = dataGridViewCellStyle6;
             this.Column1.HeaderText = "序号";
             this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
             this.Column1.Width = 65;
             // 
             // Column4
@@ -402,16 +411,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Voltage_label;
         private System.Windows.Forms.ListBox Voltage_listbox;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
   
         private System.Windows.Forms.BindingSource tablePostBindingSource;
 
@@ -424,6 +423,16 @@
         public System.Windows.Forms.ComboBox postBox;
         private System.Windows.Forms.DataGridView Post_dataGridView;
         private System.Windows.Forms.DataGridView Wire_dataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
 
 
 

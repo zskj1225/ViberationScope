@@ -44,7 +44,7 @@ namespace ViberationScope
 
          }
          */
-        private void button1_Click(object sender, EventArgs e)
+       /* private void button1_Click(object sender, EventArgs e)
         {
 
             String connStr = Properties.Settings.Default.firstConnectionString;
@@ -53,20 +53,16 @@ namespace ViberationScope
             DataTable dt = new DataTable();
             DataColumn dc;
 
-
-
-
             DataSet ds = new DataSet();
 
-        }
-
+        }*/
+      /*
         private void Select_postbutton_Click(object sender, EventArgs e)
         {
             String connStr = Properties.Settings.Default.firstConnectionString;
             SqlConnection conn = new SqlConnection(connStr);
 
             SqlCommand selectcmd = new SqlCommand("SELECT * FROM Table_Post", conn);
-            //上面的语句中使用select 0，不是为了查询出数据，而是要查询出表结构以向DataTable中填充表结构
             selectcmd.CommandType = CommandType.Text;
             selectcmd.Connection = conn;
 
@@ -79,7 +75,7 @@ namespace ViberationScope
 
             conn.Close();
 
-        }
+        }*/
 
         private void Update_button_Click(object sender, EventArgs e)
         {
@@ -114,12 +110,11 @@ namespace ViberationScope
            // bulkCopy.ColumnMappings.Add("Id","Id");//映射字段名 DataTable列名 ,数据库 对应的列名  
             bulkCopy.ColumnMappings.Add("Height","Height");
             bulkCopy.ColumnMappings.Add("Type","Type");
-            bulkCopy.ColumnMappings.Add("Name","Name");
+            bulkCopy.ColumnMappings.Add("Voltage","Voltage");
             bulkCopy.ColumnMappings.Add("Degree","Degree");
             bulkCopy.NotifyAfter = 10;
             bulkCopy.WriteToServer(dt);
             bulkCopy.Close();
-            conn.ChangeDatabase("D:\\VIBERATIONMETER\\VIBERATIONSCOPE\\BIN\\DEBUG\\FIRST.MDF");
             conn.Close();
 
             MessageBox.Show("添加成功");
@@ -194,7 +189,6 @@ namespace ViberationScope
 
 
 
-
         private void button4_Click(object sender, EventArgs e)
         {
             String connStr = Properties.Settings.Default.firstConnectionString;
@@ -244,16 +238,33 @@ namespace ViberationScope
 
 
         }
-
+        
         private void button2_Click_1(object sender, EventArgs e)
         {
-            dataGridViewWire.Rows.Clear();
+            if (dataGridViewWire.DataSource == null)
+            {
+                dataGridViewWire.Rows.Clear();
+            }
+            else
+            {
+                DataTable dt = new DataTable();
+                DataColumn dc;
+                for (int i = 0; i < dataGridViewWire.ColumnCount; i++)
+                {
+                    dc = new DataColumn();
+                    dc.ColumnName = dataGridViewWire.Columns[i].DataPropertyName.ToString();
+                    dt.Columns.Add(dc);
+                }
+                dataGridViewWire.DataSource = dt;
+            }
         }
 
         private void FormConfig1_Load(object sender, EventArgs e)
         {
+            // TODO: 这行代码将数据加载到表“ds.Table_Post”中。您可以根据需要移动或删除它。
+            //this.table_PostTableAdapter1.Fill(this.ds.Table_Post);
             // TODO: 这行代码将数据加载到表“firstDataSet11.Table_Post”中。您可以根据需要移动或删除它。
-         
+
 
 
 
@@ -310,28 +321,11 @@ namespace ViberationScope
                     dc.ColumnName = dataGridViewPost.Columns[i].DataPropertyName.ToString();
                     dt.Columns.Add(dc);
                 }
-                for (int j = 0; j < dataGridViewPost.RowCount - 1; j++)
-                {
-                    DataRow dr = dt.NewRow();
-                    for (int x = 0; x < dataGridViewPost.ColumnCount; x++)
-                    {
-                        dr[x] = dataGridViewPost.Rows[j].Cells[x].Value;
-                    }
-                    dt.Rows.Add(dr);
-                    dt.AcceptChanges();
-                }
-                //dt.AcceptChanges();
-
-                dt.Rows.Clear();
-                dt.AcceptChanges();
-                /* DataTable dt = new DataTable();
-
-                 dt.Rows.Clear();*/
-                //dataGridViewPost.Rows.Clear(); 
+                dataGridViewPost.DataSource = dt;
             }
 
         }
-
+ /*
         private void button3_Click(object sender, EventArgs e)
         {
             String connStr = Properties.Settings.Default.firstConnectionString;
@@ -351,7 +345,7 @@ namespace ViberationScope
 
             conn.Close();
         }
-
+        */
         private void Posttype_comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             String connStr = Properties.Settings.Default.firstConnectionString;
@@ -370,44 +364,53 @@ namespace ViberationScope
 
         private void PostName_listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            String connStr = Properties.Settings.Default.firstConnectionString;
-            SqlConnection conn = new SqlConnection(connStr); 
-  
-            conn.Open();
-            string[] a = new string[] {"Height","Type","Voltage","Degree" };
-            for(int i=0;i<a.LongLength; i++)
+            string[] a = new string[] { "Height", "Type", "Voltage", "Degree" };
+            for (int i=0;i<a.LongLength; i++)
             {
-                string s;
-                s = a[i];
-                SqlCommand cmd = new SqlCommand("SELECT "+s+ " FROM Table_Post WHERE Type=@Type", conn);
+                String connStr = Properties.Settings.Default.firstConnectionString;
+                SqlConnection conn = new SqlConnection(connStr);              
+                string s=a[i]; 
+                SqlCommand cmd = new SqlCommand("SELECT "+s+ " FROM Table_Post WHERE Type=@Type and Voltage=@Voltage", conn);
                 //cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value = PostName_listBox.SelectedItem.ToString();
-                cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value = PostName_listBox.SelectedValue;
+                cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value = Posttype_comboBox.SelectedItem;
+                cmd.Parameters.Add("@Voltage", SqlDbType.NVarChar, 50).Value = PostName_listBox.SelectedValue;
+                cmd.Connection = conn;
+                conn.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+             
                 
-
-
-                // cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = combo;
-                // cmd.Connection = conn;
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-                da.Fill(ds);
-                //DataTable dt = new DataTable();
-                //int a = ds.Tables[0].Rows.Count;
-                if (i == 0)
+                if (i==0)
                 {
-                    Height_textBox.Text = ds.ToString();
+                    
+                    while (dr.Read())
+                    {
+                        Height_textBox.Text =Convert.ToString(dr["Height"]);
+
+                    }
                 }
                 else if (i == 1)
                 {
-                    Posttype_textBox.Text = ds.ToString();
+                    while (dr.Read())
+                    {
+                         Posttype_textBox.Text =Convert.ToString(dr["Type"]);
+
+                    }
                 }
                 else if (i == 2)
                 {
-                    Name_textBox.Text = ds.ToString();
+                    while (dr.Read())
+                    {
+                        Voltage_textBox.Text = Convert.ToString(dr["Voltage"]);
+                    }
                 }
                 else if (i == 3)
                 {
-                   Degree_textBox.Text = ds.ToString();
-                    //ds.Tables[0].Rows[-1].ToString();
+                    while (dr.Read())
+                    {
+                        Degree_textBox.Text = Convert.ToString(dr["Degree"]);
+
+                    }
                 }
 
 
@@ -417,9 +420,167 @@ namespace ViberationScope
                 //Posttype_comboBox.Text = Posttype_comboBox.Text;
                 //Name_textBox.Text = PostName_listBox.Text;
 
+                dr.Close();
                 conn.Close();
+
+          
              }
             }
+
+        private void WireName_listBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            String[] s =new String[]{"Type","Diameter","Density","Modulus"};
+            for (int i = 0; i < s.LongLength; i++)
+            {
+                String connStr = Properties.Settings.Default.firstConnectionString;
+                SqlConnection conn = new SqlConnection(connStr);
+                String a = s[i];
+
+                SqlCommand cmd = new SqlCommand("SELECT " + a+ " FROM Table_Wire WHERE Type=@Type", conn);
+                cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value=WireName_listBox.SelectedValue;
+                cmd.Connection = conn;
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(i==0)
+                { 
+                             while (reader.Read())
+                         {
+                             Wiretype_textBox.Text = Convert.ToString(reader["Type"]);
+                        // Diameter_textBox.Text = Convert.ToString(reader["Diameter"]);
+                        //Modulus_Box.Text = Convert.ToString(reader["Modulus"]);
+                        //Density_textBox.Text = Convert.ToString(reader["Density"]);
+                        }
+
+                }
+
+                if (i == 1)
+                {
+                    while (reader.Read())
+                    {
+                        
+                         Diameter_textBox.Text = Convert.ToString(reader["Diameter"]);
+                     
+                    }
+
+                }
+                if (i == 3)
+                {
+                    while (reader.Read())
+                    {
+                      
+                        Modulus_Box.Text = Convert.ToString(reader["Modulus"]);
+                        
+                    }
+
+                }
+                if (i == 2)
+                {
+                    while (reader.Read())
+                    {
+                       
+                       Density_textBox.Text = Convert.ToString(reader["Density"]);
+                    }
+
+                }
+            }
+
+
+        }
+
+        private void Delectpost_button_Click(object sender, EventArgs e)
+        {
+            String conStr = Properties.Settings.Default.firstConnectionString;
+            SqlConnection conn = new SqlConnection(conStr);
+
+            SqlCommand cmd = new SqlCommand("Delete From Table_Post where Type=@Type and Voltage=@Voltage", conn);
+            cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value = Posttype_comboBox.SelectedItem;
+            cmd.Parameters.Add("@Voltage", SqlDbType.NVarChar, 50).Value = PostName_listBox.SelectedValue;
+            cmd.Connection = conn;
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();     
+            MessageBox.Show("删除成功");
+            this.Refresh();
+        }
+
+        private void Delectwire_button_Click(object sender, EventArgs e)
+        {
+            String conStr = Properties.Settings.Default.firstConnectionString;
+            SqlConnection conn = new SqlConnection(conStr);
+
+            SqlCommand cmd = new SqlCommand("Delete From Table_Wire where Type=@Type",conn);
+            cmd.Parameters.Add("Type", SqlDbType.NVarChar, 50).Value = Wiretype_textBox.Text;
+
+            cmd.Connection = conn;
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            this.Refresh();
+            MessageBox.Show("删除成功");       
+       
+        }
+
+        private void Postupdata_button_Click(object sender, EventArgs e)
+        {
+
+            String[] s = new string[] { "Height", "Type", "Voltage", "Degree" };
+            String[] p = new string[] { Height_textBox.Text,Posttype_textBox.Text, Voltage_textBox.Text,Degree_textBox.Text};
+            String conStr = Properties.Settings.Default.firstConnectionString;
+            SqlConnection conn = new SqlConnection(conStr);
+            conn.Open();
+            for (int i = 0; i < s.LongLength; i++)
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("Update Table_Post set " + s[i] + " = " + p[i] + " where Type=@Type and Voltage=@Voltage", conn);
+                    cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value = Posttype_comboBox.SelectedItem;
+                    cmd.Parameters.Add("@Voltage", SqlDbType.NVarChar, 50).Value = PostName_listBox.SelectedValue;
+                    cmd.Connection = conn;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException odbcEx)
+                { }
+                catch (Exception ex)
+                {
+
+                }                
+
+
+            }
+            conn.Close();
+            MessageBox.Show("修改成功");
+        }
+
+        private void Updatewire_button_Click(object sender, EventArgs e)
+        {
+            String[] s = new string[] { "Type", "Diameter", "Density", "Modulus" };
+            String[] p = new string[] { Wiretype_textBox.Text, Diameter_textBox.Text, Density_textBox.Text, Modulus_Box.Text };
+            String conStr = Properties.Settings.Default.firstConnectionString;
+            SqlConnection conn = new SqlConnection(conStr);
+            conn.Open();
+            for (int i = 0; i < s.LongLength; i++)
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("Update Table_wire set " + s[i] + " = " + p[i] + " where Type=@Type", conn);
+                    cmd.Parameters.Add("@Type", SqlDbType.NVarChar, 50).Value = WireName_listBox.SelectedValue;                   
+                    cmd.Connection = conn;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException odbcEx)
+                { }
+                catch (Exception ex)
+                {
+
+                }
+
+
+
+            }
+            conn.Close();
+            MessageBox.Show("修改成功");
+
+        }
 
 
         /*   private void PostName_listBox_MouseEnter(object sender, EventArgs e)

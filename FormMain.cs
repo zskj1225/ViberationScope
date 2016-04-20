@@ -16,6 +16,11 @@ using System.Runtime.InteropServices;
 
 using System.Data.SqlClient;
 using System.IO;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Globalization;
+
+using Microsoft.VisualBasic;
+
 
 
 
@@ -25,6 +30,8 @@ namespace ViberationScope
 {
     public partial class ViberationScope : Form
     {
+        
+        int mk = 0;
         UInt32 numPointPerLine = 1024;
         double[,] chartData;
         const int minChartRange = 8;
@@ -32,6 +39,7 @@ namespace ViberationScope
         double computedFreq = 0;
         double [] fft_mag;
         List<double> marks = new List<double>();
+        List<double> marks0 = new List<double>();
         int numRun=1;
         const double b1=0.995;
         double b2=1-b1;
@@ -43,6 +51,7 @@ namespace ViberationScope
         BlockingCircularBuffer<byte> buf1;
         sampleData originalData = new COMData();//抽样数据
         Post_Wire selectedPostWire = new Post_Wire();
+        inputFrequencySpacing sendspacing=new inputFrequencySpacing();
 
         object originalDataDevice;
         System.IO.FileStream fsRawData;
@@ -56,6 +65,7 @@ namespace ViberationScope
         {
             InitializeComponent();
         }
+        
 
         private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
@@ -99,6 +109,13 @@ namespace ViberationScope
             //jie
             Multiple_ComboBox.SelectedIndex = Multiple_ComboBox.Items.Count / 2;
             SystemSetup.getInstance().init();
+
+
+            ///注册事件tolltip为了chat提示框
+            /// 
+           // chart_Wave.GetToolTipText += new EventHandler<ToolTipEventArgs>(chart_GetToolTipText); 
+
+
             try
             {
                 numPointPerLine = SystemSetup.getInstance().dev_Setup.NumFFT;
@@ -124,8 +141,7 @@ namespace ViberationScope
             catch (Exception ex) { }
             timer1.Enabled = true;
         }
-
-        //kai
+ 
         Wlan.WlanAvailableNetwork[] wlanAvailableNetworks;
         private void refresh()
         {
@@ -162,22 +178,14 @@ namespace ViberationScope
         }
         private void timerTmp_Tick(object sender, EventArgs e)
         {
-            try
-            {
-                timerTmp.Interval = 60000;
-                refresh();
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(exp.Message);
-            }
+
         }
-    
+
         private void wlanInterfaceTmp_WlanConnectionNotification(Wlan.WlanNotificationData notifyData, Wlan.WlanConnectionNotificationData connNotifyData)
         {
             if (connNotifyData.profileName != "")
             {
-                Vibrator_label.Text = "已连接至：" + connNotifyData.profileName;
+                Vibrator_result.Text = "已连接至：" + connNotifyData.profileName;
             }
         }
 
@@ -205,7 +213,7 @@ namespace ViberationScope
                 if (buf[0] == 0xA5)
                 {
                     index = (index + 1) % numPointPerLine;
-                    chartData[0,index] = BitConverter.ToInt16(buf, 1);
+                    chartData[0, index] = BitConverter.ToInt16(buf, 1);
                     lock (sampleQ)
                     {
                         sampleQ.Enqueue(chartData[0, index]);//添加数据在sampleQ
@@ -229,44 +237,54 @@ namespace ViberationScope
         private void timer1_Tick(object sender, EventArgs e)
         {
             chart_Wave.Series[0].Points.Clear();//刷新控件内数据
-
             chart_Wave.Series[1].Points.Clear();
-            chart_Wave.Series[2].Points.Clear();
-            chart_Wave.Series[3].Points.Clear();
-            foreach (float mark in marks)
+           // chart_Wave.Series[2].Points.Clear();
+            //chart_Wave.Series[3].Points.Clear();
+           for (int i= 0;i < marks.Count;i++)
+
             {
-                Font drawFont = new Font("Arial", 16);
+                float mark = (float)marks.ElementAt(i);
+                float y = (float)marks0.ElementAt(i);
+                Font drawFont = new Font("Arial", 35);
                 SolidBrush drawBrush = new SolidBrush(Color.Red);
-
                 // Create point for upper-left corner of drawing.
-                PointF drawPoint = new PointF(mark, 0);
+                PointF drawPoint = new PointF(mark-32, y-24);
                 Graphics g = chart_Wave.CreateGraphics();
-                g.DrawString("*", drawFont, drawBrush, drawPoint);
-
+                g.DrawString("╋", drawFont, drawBrush, drawPoint);
+               
             }
             Complex[] inArr = new Complex[numPointPerLine];
+            
             inArr[0] = chartData[0,0];
             for (int i = 1; i < inArr.Length; i++)
             {
                 inArr[i] = chartData[0,i];
             }
+            Console.WriteLine( "inArr"+inArr);
+        
+
             System.Numerics.Complex[] newfft = DSP.FFT(inArr);
             for (UInt32 i = index; i < numPointPerLine; i++)
             {
                 chart_Wave.Series[0].Points.Add(chartData[0,i] + 200);
+               
             }
             for (int i = 0; i < index; i++)
             {
                 chart_Wave.Series[0].Points.Add(chartData[0,i]+200);
+               
             }
             for (int i = 0; i < numPointPerLine; i++)
             {
+                //chart_Wave.Series[1].Points[i].XValue;
                 fft_mag[i] = newfft[i].Magnitude;
             }
             for (int i = 0; i < fft_mag.Length; i++)
             {
-                chart_Wave.Series[1].Points.Add(fft_mag[i] / 4 - 100);
+                chart_Wave.Series[1].Points.Add(fft_mag[i] / 4 -100);
+              
             }
+      
             lock (sampleQ)
             {
                 while (sampleQ.Count > 0)
@@ -280,76 +298,86 @@ namespace ViberationScope
             }
             float  F, f1, f2, diff;
             if (float.TryParse(Frequency_box1.Text, out f1) && float.TryParse(Frequency_box2.Text, out f2) && float.TryParse(Wavedifference_box.Text, out diff) && diff != 0)
-            {                //f0= ((f2 - f1) / diff.ToString();
+            {
+               // F = calculat(1.22f);
                 F = calculat((f2 - f1) / diff);
-                Force_label.Text = F.ToString();
+                Force_result.Text = F.ToString();
+                F0_result.Text = (Math.Abs(f2 - f1) / diff).ToString();
             }  
 
                    
         }
-
+       
         private float calculat(float v)
         {
-            double  F = 0;
-            double g = 9.80665;
-            double ρ, D, l, θ, H, E = 181000;
-
-            l = selectedPostWire.thePost.H / Math.Sin(selectedPostWire.thePost.theta*Math.PI/180);
+            float F = 0;
+            float g = 9.8f;
+            float ro, D, l,H,X,E = 181; 
+            
+             //l = selectedPostWire.thePost.H / Math.Sin(selectedPostWire.thePost.theta*Math.PI/180);
+             l = 30*1.732f;//测试数据拉线长度
             //导入拉线表数据
-            D = selectedPostWire.theWire.D;
-            ρ = selectedPostWire.theWire.rho;
+           D = selectedPostWire.theWire.D;
+           // D = 0.02f;
+           ro = selectedPostWire.theWire.rho;
+
+            
+           // ro =1.36f;
             if (selectedPostWire.thePost.type.Equals("LV型"))
             {
-                double h0 = 4 * ρ * v * v * l * l;
-                double N,h,h1,L;
-                do
+                float  h0 = 4 * ro * v * v * l * l;
+                float h1=Convert.ToSingle(Math.Pow(ro * l * l * ((4 * v * v * h0 * h0) - 7.569 * ro * E * Math.PI * D * D / 4), 1.0 / 3));
+                float N = Math.Abs(100 * (h1 - h0) / h1), h, L;//h0修改成h1
+                while (N > 0.01) 
                 {
                    
-                     h1 = Math.Pow(ρ * l * l * ((4 * v * v * h0 * h0) - 7.569 * ρ * E * Math.PI * D * D / 4),1.0/3);
-                     N =Math.Abs( 100 * (h1 - h0) / h0);
+                     h1 =Convert.ToSingle(Math.Pow(ro * l * l * ((4 * v * v * h0 * h0) - 7.569 * ro * E * Math.PI * D * D / 4),1.0/3));
+                     N =Math.Abs( 100 * (h1 - h0) / h1);//h0修改成h1
                      h0 = h1;
                      
-                }
-                while (N > 0.01);
+                }               
                  h = h1;
-                 L = l*(1+(1/8)*(ρ*g*l/h)*(ρ*g*l/h));
-                double X = (Math.Pow((ρ * g * l * l / h), 2)) * ((E * l) / (h * L)) * Math.PI * D * D / 4;
-                System.Console.WriteLine("ρ:{0} l:{1} h:{2} X:{3}", ρ, l, h, X);
-                if (X<=0.17)
+                 L = l*(1+(1/8)*(ro*g*l/h)*(ro*g*l/h));
+                 X =Convert.ToSingle(Math.Pow((ro * g * l * l / h), 2) * ((E * l) / (h * L)) * (Math.PI * D * D / 4));//0.000038936
+
+               System.Console.WriteLine("ro:{0} l:{1} h:{2} X:{3}", ro, l, h, X);
+                if (X<0.17||X==0.17)
                 {
-                    F = 4 * ρ * l * l * v * v;
+                    F = 4 * ro * l * l * v * v;
+               
                 }
                 else if (X>0.17&&X<4*Math.PI*Math.PI)
                 {
-                    double F0 =4 * ρ * l * l * v * v;
-                    double F1;
-                    double Y;
-                    do
+                    float F0 =4 * ro * l * l * v * v;
+                    float F1 =Convert.ToSingle(Math.Pow(ro * l * l * (4 * v * v * F0 * F0 - 7.569 * ro * E * Math.PI * D * D / 4), 1.0 / 3));
+                    float Y = 100 * (F1 - F0) / F0;
+                    while (Y > 0.01) 
                     {
-                        F1 = Math.Pow(ρ * l * l * (4 * v * v * F0 * F0 - 7.569 * ρ * E * Math.PI * D * D / 4), 1.0 / 3);
+                        
+                        F1 =Convert.ToSingle( Math.Pow(ro * l * l * (4 * v * v * F0 * F0 - 7.569 * ro * E * Math.PI * D * D / 4), 1.0 / 3));
                         Y = 100 * (F1 - F0) / F0;
                         F0 = F1;
                     }
-                    while (Y > 0.01);
                     F = F1;
+
                 }
-                else if(X>=4*Math.PI*Math.PI) 
+                else if(X> 4 * Math.PI * Math.PI ||X==4*Math.PI*Math.PI) 
                 {
-                    F=ρ*l*l * v * v;
+                    F=ro*l*l * v * v;
                 }
 
             }
             else
             {
-                F = ρ*l*l*v*v-(4*Math.PI* Math.PI / (l*l))*E*(Math.PI*D*D*D*D/32);
+                F =Convert.ToSingle( ro*l*l*v*v-(4*Math.PI* Math.PI / (l*l))*E*(Math.PI*D*D*D*D/32));
 
             }
-            return (float)F;
+            return F;
         }
 
         private void toolStripButton_Start_Click(object sender, EventArgs e)
         {
-            UInt32 delay;//32位无符号整型
+            UInt32 delay;
             UInt32 threshold;
             uint.TryParse(toolStripTextBox1.Text, out delay);
             uint.TryParse(toolStripTextBox2.Text, out threshold);
@@ -375,73 +403,137 @@ namespace ViberationScope
             OpenFileDialog ofd = new OpenFileDialog();
             if (DialogResult.OK == ofd.ShowDialog())
             {
-                System.IO.FileStream fs = System.IO.File.OpenRead(ofd.FileName);
-               // System.IO.FileStream fsRawData=System.IO.File.OpenRead(ofd.FileName);
-                byte[] buf = new byte[frameLen] { 0, 0, 0 };
-                while (fs.Position < fs.Length)
-                //while (fsRawData.Position < fsRawData.Length)
+               // System.IO.FileStream fs = System.IO.File.OpenRead(ofd.FileName);
+                System.IO.FileStream fsRawData=System.IO.File.OpenRead(ofd.FileName);
+                System.IO.StreamReader sr = new System.IO.StreamReader(fsRawData);
+                //byte[] buf = new byte[frameLen] { 0, 0, 0 };
+                String name = ofd.FileName;
+                String str = File.ReadAllText(name);
+                // while (fs.Position < fs.Length)
+                String[] pieces1 =str.Split(',');
+                List<string> pieces2 = new List<string>();               
+                foreach (string str1 in pieces1)
                 {
-                    if (buf[0] == 0xA5)
+                    if (str1==",")
                     {
-                        index = (index + 1) % numPointPerLine;
-                        chartData[0,index] = BitConverter.ToInt16(buf, 1);
-                        for (int i = 0; i < frameLen; i++)
-                        {
-                            buf[i] = (byte)fsRawData.ReadByte();
-                        
-                        }
+                        continue;
                     }
                     else
                     {
-                        for (int i = 0; i < frameLen - 1; i++)
-                        {
-                            buf[i] = buf[i + 1];
+                        //while ((str1 = sr.ReadLine()) != null)
+                        //{
+                            index = (index + 1) % numPointPerLine;
+                            Double temp;
+                            if (Double.TryParse(str1, out temp))
+                            {
+
+                               chartData[0, index] = temp*4+100;
+                           // fft_mag[index] = temp;
+                            // chartData[0, index] = fft_mag[index];
                         }
-                        buf[frameLen - 1] = (byte)fsRawData.ReadByte();
+                           
+                       // }
                     }
+                  
                 }
+                chart_Wave.Series[0].Points.Clear();//刷新控件内数据
+                chart_Wave.Series[1].Points.Clear();
+                Complex[] inArr = new Complex[numPointPerLine];
+
+                inArr[0] = chartData[0, 0];
+                for (int i = 1; i < inArr.Length; i++)
+                {
+                    inArr[i] = chartData[0, i];
+                }
+                Console.WriteLine("inArr" + inArr);
+
+
+                System.Numerics.Complex[] newfft = DSP.FFT(inArr);
+                for (UInt32 i = index; i < numPointPerLine; i++)
+                {
+                    chart_Wave.Series[0].Points.Add(chartData[0, i] + 200);
+
+                }
+                for (int i = 0; i < index; i++)
+                {
+                    chart_Wave.Series[0].Points.Add(chartData[0, i]+ 200);
+                }
+                for (int i = 0; i < numPointPerLine; i++)
+                {
+                    fft_mag[i] = newfft[i].Magnitude;
+                }
+                for (int i = 0; i < fft_mag.Length; i++)
+                {
+                    chart_Wave.Series[1].Points.Add(fft_mag[i]/4-100);
+                }
+
+
             }
         }
 
         private void toolStripButton_Save_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Text Files|*.txt";
+            sfd.DefaultExt = "txt";
             if (DialogResult.OK == sfd.ShowDialog())
             {
-                System.IO.FileStream fs_in = System.IO.File.OpenRead(SystemSetup.getInstance().dev_Setup.DataPath + "\\temp");
-                System.IO.FileStream fs_out = System.IO.File.OpenWrite(sfd.FileName + ".txt");
-                const int frameLen = 3;
-                byte[] buf = new byte[frameLen] { 0, 0, 0 };
-                string data;
-                while (fs_in.Position < fs_in.Length)
+                int i= 0;
+                String data="";
+                String points = "";
+              
+                while (i<numPointPerLine)
                 {
-                    if (buf[0] == 0xA5)
-                    {
-                        data = BitConverter.ToInt16(buf, 1).ToString();
-                        byte[] databuf = System.Text.ASCIIEncoding.ASCII.GetBytes(data);
-                        fs_out.Write(databuf, 0, databuf.Length);
-                        fs_out.WriteByte(0x2c);
-                        for (int i = 0; i < frameLen; i++)
-                        {
-                            buf[i] = (byte)fs_in.ReadByte();
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < frameLen - 1; i++)
-                        {
-                            buf[i] = buf[i + 1];
-                        }
-                        buf[frameLen - 1] = (byte)fs_in.ReadByte();
-                    }
-                }
-                fs_out.Close();
-                fs_in.Close();
+                    points = (chartData[0,i] / 4 - 100).ToString();
+                   // points =(fft_mag[i]/4-100).ToString();
+                    points += ",";
+                    data +=points;
+                    i++;         
+                 }
+                System.IO.File.WriteAllText(sfd.FileName, data);
+               
 
-                System.IO.FileInfo fi = new System.IO.FileInfo(SystemSetup.getInstance().dev_Setup.DataPath+"\\temp");
-                fi.CopyTo(sfd.FileName,true);
+                //string path = System.Windows.Forms.Application.StartupPath+"/";
+                // System.IO.FileInfo fi = new System.IO.FileInfo(SystemSetup.getInstance().dev_Setup.DataPath+"\\temp");
+                // fi.CopyTo(sfd.FileName, true);
+                // buf1.saveHistory(sfd.FileNmae)
+
+                //System.IO.FileStream fs_out = System.IO.File.OpenWrite(sfd.FileName + ".txt");
+                //sfd.FileName
+
+                // const int frameLen = 3;
+                //byte[] buf = new byte[frameLen] { 0, 0, 0 };
+
+                /*  while (fs_in.Position < fs_in.Length)
+                  {
+                      if (buf[0] == 0xA5)
+                      {
+                          data = BitConverter.ToInt16(buf, 1).ToString();
+                          byte[] databuf = System.Text.ASCIIEncoding.ASCII.GetBytes(data);
+                          fs_out.Write(databuf, 0, databuf.Length);
+                          fs_out.WriteByte(0x2c);
+                          for (int i = 0; i < frameLen; i++)
+                          {
+                              buf[i] = (byte)fs_in.ReadByte();
+                          }
+                      }
+                      else
+                      {
+                          for (int i = 0; i < frameLen - 1; i++)
+                          {
+                              buf[i] = buf[i + 1];
+                          }
+                          buf[frameLen - 1] = (byte)fs_in.ReadByte();
+                      }
+                  }*/
+                //fs_out.Close();
+                //fs_in.Close();
+
+
                 //buf1.saveHistory(sfd.FileName);
             }
+  
+
         }
 
         static string GetStringForSSID(Wlan.Dot11Ssid ssid)
@@ -451,8 +543,7 @@ namespace ViberationScope
 
         
         private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-            //kai    
+        {             
 
 
 
@@ -460,6 +551,7 @@ namespace ViberationScope
 
             try
             {
+                if (Wifi_list.SelectedItems.Count == 0) return;
                 WlanClient wlanClientTmp = new WlanClient();
 
                 if (wlanClientTmp.Interfaces.Length != 0)
@@ -470,7 +562,7 @@ namespace ViberationScope
                     int index = Wifi_list.Items.IndexOf(Wifi_list.SelectedItems[0]);
                     wlanInterfaceTmp.Connect(Wlan.WlanConnectionMode.Profile, wlanAvailableNetworks[index].dot11BssType, wlanAvailableNetworks[index].profileName);
 
-                    Vibrator_label.Text = "正在连接网络：" + wlanAvailableNetworks[index].profileName;
+                    Vibrator_result.Text = "正在连接网络：" + wlanAvailableNetworks[index].profileName;
                 }
             }
             catch (Exception exp)
@@ -478,7 +570,7 @@ namespace ViberationScope
                 MessageBox.Show(exp.Message);
             }
 
-            //jie
+  
 
         }
 
@@ -487,21 +579,27 @@ namespace ViberationScope
         {
             MouseEventArgs me = (MouseEventArgs)e;
             System.Console.WriteLine(chart_Wave.Width);
-            System.Console.WriteLine(me.X);
+            System.Console.WriteLine(me.X); 
+            System.Console.WriteLine(me.Y);
             float f = me.X * 200 / chart_Wave.Width;
+
             if (marks.Count == 0)
             {
                 marks.Add(me.X);
+                marks0.Add(me.Y);             
                 Frequency_box1.Text = f.ToString();
             }
             else if (marks.Count == 1)
             {
                 marks.Add(me.X);
+                marks0.Add(me.Y);
                 Frequency_box2.Text = f.ToString();
             }
             else
             {
+
                 marks.Clear();
+                marks0.Clear();
             }
         }
 
@@ -522,7 +620,7 @@ namespace ViberationScope
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             Data_Choice frmParams = new Data_Choice();
-            frmParams.thePostWire = selectedPostWire;
+            frmParams.thePostWire = selectedPostWire;///
             if (frmParams.ShowDialog() == DialogResult.OK)
             {
             }
@@ -534,6 +632,66 @@ namespace ViberationScope
         {
             chart_Wave.ChartAreas[0].AxisY.Minimum = -minChartRange * Math.Pow(2, Multiple_ComboBox.SelectedIndex);
             chart_Wave.ChartAreas[0].AxisY.Maximum = minChartRange * Math.Pow(2, Multiple_ComboBox.SelectedIndex);
+        }
+
+        private void chart_Wave_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            int waveDiff;
+            if (mk==0)
+            {
+                MessageBox.Show("频点一选择完毕，请继续选择");
+                mk= 1;
+                
+            }
+            else if (mk == 1)
+            {
+            
+                FormInput_box fsc = new FormInput_box();
+                fsc.addspacing = sendspacing;
+                if (fsc.ShowDialog() == DialogResult.OK)
+                {
+                    Wavedifference_box.Text = Convert.ToString(sendspacing.theSp.sp);
+                }
+
+
+
+                else
+                {
+                    Wavedifference_box.Clear();
+
+                }
+
+
+
+                /*  while (!int.TryParse(Wavedifference_box.Text,out waveDiff))
+                  {
+                      String str = Interaction.InputBox("选点完毕，请输入谐波差数计算自振频率！", "谐波差数值", "");
+                      Wavedifference_box.Text = str;
+
+                  }*/
+                mk = 2;
+            
+            }
+            else if(mk==2)
+            {
+                MessageBox.Show("标记已清除，选点操作完毕！");
+                mk = 0;                
+                Frequency_box1.Text = null;
+                Frequency_box2.Text = null;
+                Wavedifference_box.Text = null;
+
+
+            }
+        }
+
+        private void toolStripButton_Start_MouseUp(object sender, MouseEventArgs e)
+        {
+            MessageBox.Show("已开始通过无线接收振子数据，波形成形后即可进行选点操作计算");
+        }
+
+        private void F0_result_TextChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show("频率测试值为: " +F0_result.Text+ "HZ.  如计算拉力请导入拉线、杆塔参数！");
         }
 
         private void toolStripButton_Config_Click(object sender, EventArgs e)
@@ -597,7 +755,7 @@ namespace ViberationScope
         }
         public override void Stop()
         {
-            lock (thePort)//爆错
+            lock (thePort)
             {
                 thePort.Close();
             }
@@ -629,15 +787,13 @@ namespace ViberationScope
         }
         void loadData(object o)
 
-        {
-
-
-            
+        {            
             string filename = o as string;
             System.IO.FileStream fs = System.IO.File.OpenRead(filename);
             byte b = 0;
             isRunning = true;
-            while (isRunning==true&&fs.Position < fs.Length)
+       
+            while (isRunning == true && fs.Position < fs.Length)
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -683,23 +839,11 @@ namespace ViberationScope
             System.Net.IPAddress _addr = new System.Net.IPAddress(new byte[] { 192, 168, 2, 1 });
             System.Net.IPEndPoint _ep = new System.Net.IPEndPoint(_addr, 8000);
             s.Send(new byte[] { 0xaa }, 1, _ep);
-            isRunning = true;
-
-            //读取exsel表
-           
-
-
-             
-        
-
-
-
-
+            isRunning = true;    
             try
             {
                 while (isRunning == true)
-                {
-                   
+                {         
 
 
 
@@ -713,8 +857,8 @@ namespace ViberationScope
                         for (int i = 2; i < package.Length - 2; i += 6)
                         {
                             buf1.Put(0xA5);
-                            buf1.Put(package[i]);
-                            buf1.Put(package[i + 1]);
+                            buf1.Put(package[i + 4]);
+                            buf1.Put(package[i + 5]);
                         }
                         pos += 100;
 

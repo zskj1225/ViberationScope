@@ -15,7 +15,7 @@ namespace ViberationScope
     {
         public float theta;
         public float H;
-        public String type;
+        public String type =  "";
     }
 
     public class Wire
